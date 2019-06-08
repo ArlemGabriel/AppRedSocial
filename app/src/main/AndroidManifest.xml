@@ -13,7 +13,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Perfil"></activity>
         <activity android:name=".RegistrarseEmail" />
-        <activity android:name=".Registro" />
         <activity android:name=".Logueo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

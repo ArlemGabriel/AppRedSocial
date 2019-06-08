@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class RegistrarseEmail extends AppCompatActivity {
     Button btnRegistro;
-    TextView txtEmail,txtContrasena;
+    TextView txtEmail,txtContrasena,txtAtras;
     FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +28,7 @@ public class RegistrarseEmail extends AppCompatActivity {
         btnRegistro = findViewById(R.id.btnRegistrar);
         txtEmail = findViewById(R.id.txtRegistrarEmail);
         txtContrasena = findViewById(R.id.txtRegistrarPass);
+        txtAtras = findViewById(R.id.txtAtras);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -53,6 +54,14 @@ public class RegistrarseEmail extends AppCompatActivity {
                 }
             }
         });
+        txtAtras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegistrarseEmail.this,Logueo.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
     private void registrarse(String email,String password){
