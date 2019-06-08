@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "624486036699",
+    "firebase_url": "https://fir-appredsocial.firebaseio.com",
+    "project_id": "fir-appredsocial",
+    "storage_bucket": "fir-appredsocial.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624486036699:android:f46793f909272c72",
+        "android_client_info": {
+          "package_name": "com.example.appredsocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624486036699-egne8l6mq4k7518i6479o73np4gbltbt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.appredsocial",
+            "certificate_hash": "e40c35de9abdcb65a929de4d0fadb65bf41bb078"
+          }
+        },
+        {
+          "client_id": "624486036699-84q052brq2efajjjb6ikmhl5o5fud16c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSHpfYWnOdqmbD4NGCtGgllZOFNwrJAgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624486036699-84q052brq2efajjjb6ikmhl5o5fud16c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
