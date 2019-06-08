@@ -16,19 +16,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Logueo extends AppCompatActivity {
+public class RegistrarseEmail extends AppCompatActivity {
     Button btnRegistro;
-    TextView txtEmail,txtContrasena,txtRegistrarse;
+    TextView txtEmail,txtContrasena;
     FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registrarse_email);
 
-        btnRegistro = findViewById(R.id.btnRegistrarseEmail);
-        txtEmail = findViewById(R.id.txtLogueoEmail);
-        txtContrasena = findViewById(R.id.txtLogueoPass);
-        txtRegistrarse = findViewById(R.id.txtRegistrarse);
+        btnRegistro = findViewById(R.id.btnRegistrar);
+        txtEmail = findViewById(R.id.txtRegistrarEmail);
+        txtContrasena = findViewById(R.id.txtRegistrarPass);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -42,43 +41,34 @@ public class Logueo extends AppCompatActivity {
             }
         };
 
-        txtRegistrarse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Logueo.this,Registro.class);
-                startActivity(intent);
-            }
-        });
-
         btnRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String correo = txtEmail.getText().toString();
                 String contra = txtContrasena.getText().toString();
-                if(!contra.isEmpty() && !correo.isEmpty()){
-                    loguearse(correo,contra);
+                if(!correo.isEmpty() && !contra.isEmpty()){
+                    registrarse(correo,contra);
                 }else{
-                    Toast.makeText(Logueo.this,"Ingrese sus datos",Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrarseEmail.this,"Ingrese sus datos",Toast.LENGTH_LONG).show();
                 }
             }
         });
+
     }
-    private void loguearse(String email,String password){
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    private void registrarse(String email,String password){
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(Logueo.this,"Sesión Iniciada",Toast.LENGTH_LONG).show();
-                    /*Intent intent = new Intent(Logueo.this,MainActivity.class);
-                    startActivity(intent);*/
+                    Toast.makeText(RegistrarseEmail.this,"Usuario Creado Exitosamente",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RegistrarseEmail.this,Perfil.class);
+                    startActivity(intent);
                 }else{
-                    Toast.makeText(Logueo.this,task.getException().getMessage()+"",Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrarseEmail.this,task.getException().getMessage()+"",Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
-
-    @Override
     protected void onStart() {
         super.onStart();
         FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
@@ -91,4 +81,5 @@ public class Logueo extends AppCompatActivity {
             FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
     }
-    }
+}
+
