@@ -25,9 +25,9 @@ public class RegistrarseEmail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrarse_email);
 
-        btnRegistro = findViewById(R.id.btnRegistrar);
-        txtEmail = findViewById(R.id.txtRegistrarEmail);
-        txtContrasena = findViewById(R.id.txtRegistrarPass);
+        btnRegistro = findViewById(R.id.btnRecuperarContrasena);
+        txtEmail = findViewById(R.id.txtEmail);
+        txtContrasena = findViewById(R.id.txtPass);
         txtAtras = findViewById(R.id.txtAtras);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
