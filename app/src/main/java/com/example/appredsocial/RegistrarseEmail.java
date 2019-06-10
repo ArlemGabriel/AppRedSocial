@@ -10,20 +10,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appredsocial.Referencias.ReferenciasFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrarseEmail extends AppCompatActivity {
     Button btnRegistro;
     TextView txtEmail,txtContrasena,txtAtras;
     FirebaseAuth.AuthStateListener mAuthListener;
+    private DatabaseReference refUsuarioBD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrarse_email);
+
+        refUsuarioBD = FirebaseDatabase.getInstance().getReference(ReferenciasFirebase.REFERENCIA_USUARIO);
 
         btnRegistro = findViewById(R.id.btnRecuperarContrasena);
         txtEmail = findViewById(R.id.txtEmail);
@@ -64,11 +71,18 @@ public class RegistrarseEmail extends AppCompatActivity {
 
 
     }
-    private void registrarse(String email,String password){
+    private void registrarse(final String email, String password){
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    //Crear un usuario en la BD vacío solamente con el correo
+
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference("message");
+
+                    Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
+                    refUsuarioBD.push().setValue(nuevoUsuario);
                     Toast.makeText(RegistrarseEmail.this,"Usuario Creado Exitosamente",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(RegistrarseEmail.this,Perfil.class);
                     startActivity(intent);
