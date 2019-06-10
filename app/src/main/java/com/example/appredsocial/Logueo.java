@@ -145,11 +145,11 @@ public class Logueo extends AppCompatActivity {
                                 Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
                                 refUsuarioBD.push().setValue(nuevoUsuario);
 
-                                Intent intent = new Intent(Logueo.this,Perfil.class);
+                                Intent intent = new Intent(Logueo.this,MainActivity.class);
                                 startActivity(intent);
                                 Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
                             }else{
-                                Intent intent = new Intent(Logueo.this,Perfil.class);
+                                Intent intent = new Intent(Logueo.this,MainActivity.class);
                                 startActivity(intent);
                                 Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
                             }
