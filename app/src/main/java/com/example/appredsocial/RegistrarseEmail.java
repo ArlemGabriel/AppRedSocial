@@ -79,7 +79,6 @@ public class RegistrarseEmail extends AppCompatActivity {
                     //Crear un usuario en la BD vacío solamente con el correo
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("message");
 
                     Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
                     refUsuarioBD.push().setValue(nuevoUsuario);

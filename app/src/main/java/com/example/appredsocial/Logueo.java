@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appredsocial.Referencias.ReferenciasFirebase;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -24,6 +25,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Logueo extends AppCompatActivity {
     Button btnLogueo,btnRegistrarseEmail,btnIngresarGoogle;
@@ -31,6 +34,7 @@ public class Logueo extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
+    private DatabaseReference refUsuarioBD;
     static final int GOOGLE_SIGN =123;
 
     @Override
@@ -44,7 +48,7 @@ public class Logueo extends AppCompatActivity {
         btnRegistrarseEmail = findViewById(R.id.btnRegistrarEmail);
         btnIngresarGoogle = findViewById(R.id.btnRegistrarseGoogle);
         txtRecuperarContra = findViewById(R.id.txtViewRecuperarContra);
-
+        refUsuarioBD = FirebaseDatabase.getInstance().getReference(ReferenciasFirebase.REFERENCIA_USUARIO);
         firebaseAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
@@ -135,11 +139,22 @@ public class Logueo extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Log.d("TAG","Signin success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Intent intent = new Intent(Logueo.this,Perfil.class);
-                            startActivity(intent);
-                            Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
+                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                            if(isNew){
+                                FirebaseUser user = firebaseAuth.getCurrentUser();
+                                String email = user.getEmail();
 
+                                Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
+                                refUsuarioBD.push().setValue(nuevoUsuario);
+
+                                Intent intent = new Intent(Logueo.this,Perfil.class);
+                                startActivity(intent);
+                                Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
+                            }else{
+                                Intent intent = new Intent(Logueo.this,Perfil.class);
+                                startActivity(intent);
+                                Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
+                            }
                         }else{
                             Log.w("TAG","Signin failed");
                             Toast.makeText(Logueo.this,"Signin Failed",Toast.LENGTH_LONG).show();
