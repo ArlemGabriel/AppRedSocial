@@ -83,7 +83,7 @@ public class RegistrarseEmail extends AppCompatActivity {
                     Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
                     refUsuarioBD.push().setValue(nuevoUsuario);
                     Toast.makeText(RegistrarseEmail.this,"Usuario Creado Exitosamente",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegistrarseEmail.this,Perfil.class);
+                    Intent intent = new Intent(RegistrarseEmail.this, MainActivity.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(RegistrarseEmail.this,task.getException().getMessage()+"",Toast.LENGTH_LONG).show();

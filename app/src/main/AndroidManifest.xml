@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".RecuperarContrasena"></activity>
         <activity
-            android:name=".Perfil"
+            android:name=".MainActivity"
             android:label="@string/title_activity_perfil" />
         <activity android:name=".RegistrarseEmail" />
         <activity android:name=".Logueo">

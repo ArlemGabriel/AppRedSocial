@@ -2,7 +2,6 @@ package com.example.appredsocial;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.internal.Objects;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -40,7 +38,7 @@ public class Logueo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_log_in);
 
         btnLogueo = findViewById(R.id.btnLogueo);
         txtEmail = findViewById(R.id.txtLogueoEmail);
@@ -170,7 +168,7 @@ public class Logueo extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(Logueo.this,"Sesión Iniciada",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(Logueo.this,Perfil.class);
+                    Intent intent = new Intent(Logueo.this, MainActivity.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(Logueo.this,task.getException().getMessage()+"",Toast.LENGTH_LONG).show();
