@@ -28,6 +28,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    //Dependencias carrusel de fotos
+    implementation 'com.synnapps:carouselview:0.1.5'
+
     //Dependencias firebase
     implementation 'com.android.support:design:26.1.0'
     //implementation 'com.google.firebase:firebase-core:16.0.9'
