@@ -34,7 +34,10 @@ public class Perfil extends AppCompatActivity {
 
         /*Codigo del carrusel de fotos
         carouselView = findViewById(R.id.carrouselView);
-        final Drawable[] sampleImages = {};             //Las fotos que aparecen en el carrusel de fotos
+        final Drawable[] sampleImages = {};     //Las fotos que aparecen en el carrusel de fotos
+                                                //tambien se puede hacer con ints, y se meten los
+                                                //ids, pero como lo agarramos de la base de datos
+                                                //mejor con Drawable
 
         carouselView.setPageCount(sampleImages.length); //La cantidad de paginas del carrusel
 
@@ -42,7 +45,9 @@ public class Perfil extends AppCompatActivity {
         carouselView.setImageListener(new ImageListener() {
             @Override
             public void setImageForPosition(int position, ImageView imageView) {
-                imageView.setImageDrawable(sampleImages[position]);
+                imageView.setImageDrawable(sampleImages[position]); //Tambien se puede usar setImageResource y usar
+                                                                    //ids, pero como estamos agarrando las fotos de
+                                                                    //base de datos mejor con Drawable
             }
         });
 
