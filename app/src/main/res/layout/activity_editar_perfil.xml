@@ -163,7 +163,7 @@
         android:textColor="#FFFFFF" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imgFotoperfil"
         android:layout_width="113dp"
         android:layout_height="107dp"
         android:layout_alignParentStart="true"
