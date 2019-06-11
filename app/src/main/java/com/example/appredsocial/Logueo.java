@@ -17,6 +17,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -25,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Logueo extends AppCompatActivity {
     Button btnLogueo,btnRegistrarseEmail,btnIngresarGoogle;
@@ -32,7 +35,7 @@ public class Logueo extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth firebaseAuth;
-    private DatabaseReference refUsuarioBD;
+    FirebaseFirestore refUsuarioBD;
     static final int GOOGLE_SIGN =123;
 
     @Override
@@ -46,7 +49,7 @@ public class Logueo extends AppCompatActivity {
         btnRegistrarseEmail = findViewById(R.id.btnRegistrarEmail);
         btnIngresarGoogle = findViewById(R.id.btnRegistrarseGoogle);
         txtRecuperarContra = findViewById(R.id.txtViewRecuperarContra);
-        refUsuarioBD = FirebaseDatabase.getInstance().getReference(ReferenciasFirebase.REFERENCIA_USUARIO);
+        refUsuarioBD = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions
@@ -143,11 +146,26 @@ public class Logueo extends AppCompatActivity {
                                 String email = user.getEmail();
 
                                 Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","","");
-                                refUsuarioBD.push().setValue(nuevoUsuario);
 
-                                Intent intent = new Intent(Logueo.this,EditarPerfil.class);
-                                startActivity(intent);
-                                Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
+
+                                refUsuarioBD.collection(ReferenciasFirebase.REFERENCIA_RAIZBD)
+                                        .document(ReferenciasFirebase.REFERENCIA_PERFILES)
+                                        .collection(user.getEmail())
+                                        .document("Datos Perfil").set(nuevoUsuario)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(Logueo.this,"Usuario Creado Exitosamente",Toast.LENGTH_LONG).show();
+                                                Intent intent = new Intent(Logueo.this, EditarPerfil.class);
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(Logueo.this,"Falló el registro de usuario",Toast.LENGTH_LONG).show();
+                                            }
+                                        });
                             }else{
                                 Intent intent = new Intent(Logueo.this,MainActivity.class);
                                 startActivity(intent);

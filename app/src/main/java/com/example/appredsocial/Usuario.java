@@ -9,13 +9,16 @@ public class Usuario {
     String correo;
     String ciudad;
     String telefono;
-    LocalDate fechaNacimiento;
+    String fechaNacimiento;
     String primaria;
     String secundaria;
     String universidad;
     String urlfotoperfil;
+    public Usuario(){
 
-    public Usuario(String nombre, String apellidos, String correo, String ciudad, String telefono, LocalDate fechaNacimiento, String primaria, String secundaria, String universidad,String urlfotoperfil) {
+    }
+
+    public Usuario(String nombre, String apellidos, String correo, String ciudad, String telefono, String fechaNacimiento, String primaria, String secundaria, String universidad,String urlfotoperfil) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.correo = correo;
@@ -68,11 +71,11 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public LocalDate getFechaNacimiento() {
+    public String getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
