@@ -10,13 +10,7 @@
         android:textSize="30sp"
         android:text="Fragment Perfil"
         android:layout_centerInParent="true"/>
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="-2dp"
-        android:layout_marginBottom="2dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -156,6 +156,7 @@ public class EditarPerfil extends AppCompatActivity {
                                         usuario.put("Nombre", nombre);
                                         usuario.put("Apellidos", apellidos);
                                         usuario.put("Ciudad", ciudad);
+                                        usuario.put("FechaNacimiento",fechanacimiento);
                                         usuario.put("Telefono",telefono);
                                         usuario.put("Primaria",primaria);
                                         usuario.put("Secundaria",secundaria);

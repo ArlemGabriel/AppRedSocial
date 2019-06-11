@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_dark">
-    <TextView
-        android:layout_width="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layoutBusquedaAmigos"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="Fragment Amigos"
-        android:layout_centerInParent="true"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/txtBusquedaAmigos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:maxLines="1"
+            android:inputType="text"/>
+        <Button
+            android:id="@+id/btnBusquedaAmigos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="buscar"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layoutBusquedaAmigos"/>
 
 </RelativeLayout>
