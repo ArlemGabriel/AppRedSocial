@@ -132,7 +132,6 @@
             android:textColorLink="#009688" />
 
 
-
         <RadioGroup
             android:id="@+id/radio_group"
             android:layout_width="117dp"
@@ -159,6 +158,12 @@
 
 
         </RadioGroup>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/btnAceptar"
