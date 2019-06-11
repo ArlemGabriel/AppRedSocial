@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditarPerfil">
+
+    <LinearLayout
+        android:layout_width="286dp"
+        android:layout_height="517dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="100dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.584"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.775">
+
+        <EditText
+            android:id="@+id/txtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Nombre"
+            android:inputType="textPersonName"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtApellidos"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Apellidos"
+            android:inputType="textPersonName"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Ciudad"
+            android:inputType="text"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Telefono"
+            android:inputType="textPhonetic"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtFechaNac"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Fecha de Nacimiento"
+            android:inputType="date"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtPrimaria"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Estudios de Primaria"
+            android:inputType="text"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtSecundaria"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Estudios de Secundaria"
+            android:inputType="text"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+        <EditText
+            android:id="@+id/txtUniversidad"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:ems="10"
+            android:fontFamily="sans-serif-condensed"
+            android:hint="Estudios Universitarios"
+            android:inputType="text"
+            android:textColor="#009688"
+            android:textColorHint="#009688"
+            android:textColorLink="#009688" />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="117dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="230dp"
+        android:layout_marginBottom="61dp">
+
+        <RadioButton
+            android:id="@+id/radio_femenino"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/radio_group"
+            android:onClick="checkButton"
+            android:text="Femenino" />
+
+        <RadioButton
+            android:id="@+id/radio_masculino"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/radio_group"
+            android:checked="true"
+            android:onClick="checkButton"
+            android:text="Masculino" />
+
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnAceptar"
+        android:layout_width="144dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="62dp"
+        android:layout_marginBottom="62dp"
+        android:background="#009688"
+        android:text="Aceptar"
+        android:textColor="#FFFFFF" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="113dp"
+        android:layout_height="107dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="152dp"
+        android:layout_marginBottom="613dp"
+        app:srcCompat="@drawable/user" />
+
+
+</RelativeLayout>

@@ -142,10 +142,10 @@ public class Logueo extends AppCompatActivity {
                                 FirebaseUser user = firebaseAuth.getCurrentUser();
                                 String email = user.getEmail();
 
-                                Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
+                                Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","","");
                                 refUsuarioBD.push().setValue(nuevoUsuario);
 
-                                Intent intent = new Intent(Logueo.this,MainActivity.class);
+                                Intent intent = new Intent(Logueo.this,EditarPerfil.class);
                                 startActivity(intent);
                                 Toast.makeText(Logueo.this,"Sesion iniciada",Toast.LENGTH_LONG).show();
                             }else{

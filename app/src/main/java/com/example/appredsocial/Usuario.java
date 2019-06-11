@@ -13,8 +13,9 @@ public class Usuario {
     String primaria;
     String secundaria;
     String universidad;
+    String urlfotoperfil;
 
-    public Usuario(String nombre, String apellidos, String correo, String ciudad, String telefono, LocalDate fechaNacimiento, String primaria, String secundaria, String universidad) {
+    public Usuario(String nombre, String apellidos, String correo, String ciudad, String telefono, LocalDate fechaNacimiento, String primaria, String secundaria, String universidad,String urlfotoperfil) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.correo = correo;
@@ -24,6 +25,7 @@ public class Usuario {
         this.primaria = primaria;
         this.secundaria = secundaria;
         this.universidad = universidad;
+        this.urlfotoperfil = urlfotoperfil;
     }
 
     public String getNombre() {
@@ -72,6 +74,14 @@ public class Usuario {
 
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public String getUrlfotoperfil() {
+        return urlfotoperfil;
+    }
+
+    public void setUrlfotoperfil(String urlfotoperfil) {
+        this.urlfotoperfil = urlfotoperfil;
     }
 
     public String getPrimaria() {

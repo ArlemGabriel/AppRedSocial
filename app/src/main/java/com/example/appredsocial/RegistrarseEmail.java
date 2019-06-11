@@ -80,10 +80,10 @@ public class RegistrarseEmail extends AppCompatActivity {
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-                    Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","");
+                    Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","","");
                     refUsuarioBD.push().setValue(nuevoUsuario);
                     Toast.makeText(RegistrarseEmail.this,"Usuario Creado Exitosamente",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegistrarseEmail.this, MainActivity.class);
+                    Intent intent = new Intent(RegistrarseEmail.this, EditarPerfil.class);
                     startActivity(intent);
                 }else{
                     Toast.makeText(RegistrarseEmail.this,task.getException().getMessage()+"",Toast.LENGTH_LONG).show();
