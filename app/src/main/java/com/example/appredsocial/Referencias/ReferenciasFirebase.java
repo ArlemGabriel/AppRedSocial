@@ -6,4 +6,5 @@ public class ReferenciasFirebase {
     final static public String REFERENCIA_USUARIOS = "Usuarios";
     final static public String REFERENCIA_POSTS= "Posts";
     final static public String REFERENCIA_FOTOS_PERFIL = "FotosPerfil";
+    final static public String REFERENCIA_FOTOS_POSTS = "FotosPost";
 }

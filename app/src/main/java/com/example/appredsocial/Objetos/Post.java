@@ -11,10 +11,19 @@ public class Post {
     int mes;
     int dia;
     int hora;
+    int minutos;
     int segundos;
 
     public Post(){
 
+    }
+
+    public int getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(int minutos) {
+        this.minutos = minutos;
     }
 
     public Post(String correoUsuario, String urlImagen, String descripcion, int idPost, int anno, int mes, int dia, int hora, int segundos) {
