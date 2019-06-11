@@ -148,10 +148,8 @@ public class Logueo extends AppCompatActivity {
                                 Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","","");
 
 
-                                refUsuarioBD.collection(ReferenciasFirebase.REFERENCIA_RAIZBD)
-                                        .document(ReferenciasFirebase.REFERENCIA_PERFILES)
-                                        .collection(user.getEmail())
-                                        .document("Datos Perfil").set(nuevoUsuario)
+                                refUsuarioBD.collection(ReferenciasFirebase.REFERENCIA_PERFILES)
+                                        .document(user.getEmail()).set(nuevoUsuario)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
