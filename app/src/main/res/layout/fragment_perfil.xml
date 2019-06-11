@@ -73,10 +73,13 @@
         app:strokeColor="#FF777777"
         app:strokeWidth="1dp"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_below="@+id/carrouselView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -88,7 +91,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="18dp"
-        android:layout_marginBottom="66dp"
+        android:layout_marginBottom="20dp"
         app:backgroundTint="#1B4741"
         app:layout_constraintHorizontal_bias="0.976"
         app:layout_constraintVertical_bias="0.911"
