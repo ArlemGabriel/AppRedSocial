@@ -26,6 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegistrarseEmail extends AppCompatActivity {
     Button btnRegistro;
     TextView txtEmail,txtContrasena,txtAtras;
@@ -82,14 +85,24 @@ public class RegistrarseEmail extends AppCompatActivity {
 
     }
     private void registrarse(final String email, String password){
+        final Map<String, Object> usuario = new HashMap<>();
+
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    Usuario nuevoUsuario = new Usuario("","",email,"","",null,"","","","");
+
+                    usuario.put("Nombre", "");
+                    usuario.put("Apellidos", "");
+                    usuario.put("Ciudad", "");
+                    usuario.put("Email",email);
+                    usuario.put("Telefono","");
+                    usuario.put("Primaria","");
+                    usuario.put("Secundaria","");
+                    usuario.put("Universidad","");
+
                     refUsuarioBD.collection(ReferenciasFirebase.REFERENCIA_PERFILES)
-                            .document(user.getEmail()).set(nuevoUsuario)
+                            .document(usuario.get("Email").toString()).set(usuario)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
