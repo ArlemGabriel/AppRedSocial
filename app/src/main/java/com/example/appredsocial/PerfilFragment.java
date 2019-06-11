@@ -64,6 +64,7 @@ public class PerfilFragment extends Fragment {
         txtPrimaria = rootView.findViewById(R.id.txtPrimaria);
         txtSecundaria = rootView.findViewById(R.id.txtSecundaria);
         txtUniversidad = rootView.findViewById(R.id.txtUniversidad);
+        txtGenero = rootView.findViewById(R.id.txtGenero);
         imageViewFotoPerfil = rootView.findViewById(R.id.imgPerfil);
 
         refStorage = FirebaseStorage.getInstance().getReference(ReferenciasFirebase.REFERENCIA_FOTOS_PERFIL);
@@ -122,6 +123,7 @@ public class PerfilFragment extends Fragment {
                         txtPrimaria.setText("Primaria: "+" "+documentSnapshot.getString("Primaria"));
                         txtSecundaria.setText("Secundaria: "+" "+documentSnapshot.getString("Secundaria"));
                         txtUniversidad.setText("Universidad: "+" "+documentSnapshot.getString("Universidad"));
+                        txtGenero.setText("Genero"+" "+documentSnapshot.getString("Genero"));
                         String urlFirebase = documentSnapshot.getString("Url");
                         if(!urlFirebase.isEmpty()){
                             Picasso.with(getContext()).load(urlFirebase).fit().centerCrop().into(imageViewFotoPerfil);

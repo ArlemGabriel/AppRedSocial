@@ -156,6 +156,7 @@ public class Logueo extends AppCompatActivity {
                                 usuario.put("Primaria","");
                                 usuario.put("Secundaria","");
                                 usuario.put("Universidad","");
+                                usuario.put("Url","");
 
                                 refUsuarioBD.collection(ReferenciasFirebase.REFERENCIA_PERFILES)
                                         .document(user.getEmail()).set(usuario)

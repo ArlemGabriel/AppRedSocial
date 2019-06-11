@@ -100,6 +100,7 @@ public class RegistrarseEmail extends AppCompatActivity {
                     usuario.put("Primaria","");
                     usuario.put("Secundaria","");
                     usuario.put("Universidad","");
+                    usuario.put("Url","");
 
                     refUsuarioBD.collection(ReferenciasFirebase.REFERENCIA_PERFILES)
                             .document(usuario.get("Email").toString()).set(usuario)
