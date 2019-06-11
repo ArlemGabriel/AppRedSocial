@@ -83,7 +83,10 @@ public class EditarPerfil extends AppCompatActivity {
                 final String datosPrimaria = txtPrimaria.getText().toString();
                 final String datosSecundaria = txtSecundaria.getText().toString();
                 final String datosUniversidad = txtUniversidad.getText().toString();
-                guardarInformacionBD(datosNombre,datosApellidos,datosCiudad,datosTelefono,datosFechaNac,datosPrimaria,datosSecundaria,datosUniversidad);
+                int idradiobutton = radioGroup.getCheckedRadioButtonId();
+                radioButton = findViewById(idradiobutton);
+                String datosgenero = radioButton.getText().toString();
+                guardarInformacionBD(datosNombre,datosApellidos,datosCiudad,datosTelefono,datosFechaNac,datosPrimaria,datosSecundaria,datosUniversidad,datosgenero);
             }
         });
 
@@ -118,7 +121,7 @@ public class EditarPerfil extends AppCompatActivity {
 
         }
     }
-    private void guardarInformacionBD(final String nombre,final String apellidos,final String ciudad,final String telefono,final String fechanacimiento,final String primaria,final String secundaria,final String universidad){
+    private void guardarInformacionBD(final String nombre, final String apellidos, final String ciudad, final String telefono, final String fechanacimiento, final String primaria, final String secundaria, final String universidad, final String genero){
 
         final Map<String, Object> usuario = new HashMap<>();
 
@@ -157,6 +160,7 @@ public class EditarPerfil extends AppCompatActivity {
                                         usuario.put("Primaria",primaria);
                                         usuario.put("Secundaria",secundaria);
                                         usuario.put("Universidad",universidad);
+                                        usuario.put("Genero",genero);
                                         usuario.put("Url",pathUrl);
 
                                         DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_PERFILES).document(email);
