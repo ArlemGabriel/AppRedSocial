@@ -1,17 +1,29 @@
 package com.example.appredsocial;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.appredsocial.Referencias.ReferenciasFirebase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.example.appredsocial.Objetos.Post;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,7 +31,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.synnapps.carouselview.CarouselView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.ArrayList;
 
@@ -27,9 +51,12 @@ public class PerfilFragment extends Fragment {
     View rootView;
     private RecyclerView recyclerView;
     private CarouselView carouselView;
-    private TextView txtNombre;
-    FirebaseAuth firebaseAuth;
+    private TextView txtNombre,txtCiudad,txtTelefono,txtCorreo,txtGenero,txtPrimaria,txtSecundaria,txtUniversidad;
+    private ImageView imageViewFotoPerfil;
 
+    private StorageReference refStorage;
+    private FirebaseFirestore refFirestore;
+    private FirebaseAuth firebaseAuth;
 
 
     @Nullable
@@ -38,14 +65,22 @@ public class PerfilFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView= inflater.inflate(R.layout.fragment_perfil, container, false);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         inicializarRecyclerView();
 
-        firebaseAuth = FirebaseAuth.getInstance();
         txtNombre = rootView.findViewById(R.id.txtNombre);
+        txtCiudad = rootView.findViewById(R.id.txtCiudad);
+        txtCorreo = rootView.findViewById(R.id.txtCorreo);
+        txtTelefono = rootView.findViewById(R.id.txtTelefono);
+        txtPrimaria = rootView.findViewById(R.id.txtPrimaria);
+        txtSecundaria = rootView.findViewById(R.id.txtSecundaria);
+        txtUniversidad = rootView.findViewById(R.id.txtUniversidad);
+        imageViewFotoPerfil = rootView.findViewById(R.id.imgPerfil);
 
-        String current = firebaseAuth.getCurrentUser().getEmail();
-        txtNombre.setText(current);
+        refStorage = FirebaseStorage.getInstance().getReference(ReferenciasFirebase.REFERENCIA_FOTOS_PERFIL);
+        refFirestore = FirebaseFirestore.getInstance();
 
+        cargarPerfil();
 
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -108,4 +143,35 @@ public class PerfilFragment extends Fragment {
             }
         });*/
     }
+
+    private void cargarPerfil() {
+        refFirestore.collection(ReferenciasFirebase.REFERENCIA_PERFILES).document(firebaseAuth.getCurrentUser().getEmail()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        String nombreCompleto = documentSnapshot.getString("Nombre")+" "+documentSnapshot.getString("Apellidos");
+                        txtNombre.setText(nombreCompleto);
+                        txtCorreo.setText("Correo: "+" "+documentSnapshot.getString("Email"));
+                        txtCiudad.setText("Ciudad: "+" "+documentSnapshot.getString("Ciudad"));
+                        txtTelefono.setText("Telefono: "+" "+documentSnapshot.getString("Telefono"));
+                        txtPrimaria.setText("Primaria: "+" "+documentSnapshot.getString("Primaria"));
+                        txtSecundaria.setText("Secundaria: "+" "+documentSnapshot.getString("Secundaria"));
+                        txtUniversidad.setText("Universidad: "+" "+documentSnapshot.getString("Universidad"));
+                        String urlFirebase = documentSnapshot.getString("Url");
+                        if(!urlFirebase.isEmpty()){
+                            Picasso.with(getContext()).load(urlFirebase).fit().centerCrop().into(imageViewFotoPerfil);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("Error: ",e.getMessage());
+                        //Toast.makeText(PerfilFragment.this,"Carga de perfil fallida",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+
 }

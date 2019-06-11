@@ -11,22 +11,29 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appredsocial.Referencias.ReferenciasFirebase;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditarPerfil extends AppCompatActivity {
 
@@ -38,7 +45,10 @@ public class EditarPerfil extends AppCompatActivity {
     private Uri uriImagen;
     private static final int PICK_IMAGE_REQUEST = 1;
     private StorageReference refStorage;
-    private FirebaseFirestore refUsuarioBD;
+    private FirebaseFirestore refFirestore;
+    private FirebaseAuth firebaseAuth;
+    private ProgressBar prbSubidaDatos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,21 +60,30 @@ public class EditarPerfil extends AppCompatActivity {
         txtNombre = findViewById(R.id.txtNombre);
         txtApellidos = findViewById(R.id.txtApellidos);
         txtCiudad = findViewById(R.id.txtCiudad);
-        txtFechaNac = findViewById(R.id.txtFechaNac);
+        txtFechaNac = findViewById(R.id.lblFechaNacimiento);
         txtTelefono = findViewById(R.id.txtTelefono);
         txtPrimaria = findViewById(R.id.txtPrimaria);
         txtSecundaria = findViewById(R.id.txtSecundaria);
         txtUniversidad = findViewById(R.id.txtUniversidad);
+        prbSubidaDatos = findViewById(R.id.progress_bar);
+
 
         refStorage = FirebaseStorage.getInstance().getReference(ReferenciasFirebase.REFERENCIA_FOTOS_PERFIL);
-        refUsuarioBD = FirebaseFirestore.getInstance();
+        refFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(EditarPerfil.this, MainActivity.class);
-                startActivity(intent);*/
-                guardarInformacionBD();
+                final String datosNombre = txtNombre.getText().toString();
+                final String datosApellidos = txtApellidos.getText().toString();
+                final String datosCiudad = txtCiudad.getText().toString();
+                final String datosTelefono = txtTelefono.getText().toString();
+                final String datosFechaNac = txtFechaNac.getText().toString();
+                final String datosPrimaria = txtPrimaria.getText().toString();
+                final String datosSecundaria = txtSecundaria.getText().toString();
+                final String datosUniversidad = txtUniversidad.getText().toString();
+                guardarInformacionBD(datosNombre,datosApellidos,datosCiudad,datosTelefono,datosFechaNac,datosPrimaria,datosSecundaria,datosUniversidad);
             }
         });
 
@@ -99,17 +118,11 @@ public class EditarPerfil extends AppCompatActivity {
 
         }
     }
-    private void guardarInformacionBD(){
-        final String datosNombre = txtNombre.getText().toString();
-        final String datosApellidos = txtApellidos.getText().toString();
-        final String datosCiudad = txtCiudad.getText().toString();
-        final String datosTelefono = txtTelefono.getText().toString();
-        final String datosFechaNac = txtFechaNac.getText().toString();
-        final String datosPrimaria = txtPrimaria.getText().toString();
-        final String datosSecundaria = txtSecundaria.getText().toString();
-        final String datosUniversidad = txtUniversidad.getText().toString();
+    private void guardarInformacionBD(final String nombre,final String apellidos,final String ciudad,final String telefono,final String fechanacimiento,final String primaria,final String secundaria,final String universidad){
 
-        if(datosNombre.isEmpty() || datosApellidos.isEmpty() || datosFechaNac.isEmpty()) {
+        final Map<String, Object> usuario = new HashMap<>();
+
+        if(nombre.isEmpty() || apellidos.isEmpty() || fechanacimiento.isEmpty()) {
             Toast.makeText(EditarPerfil.this, "Nombre,Apellidos y Fecha de Nacimiento son campos obligatorios", Toast.LENGTH_LONG).show();
         }else{
             if (uriImagen != null){
@@ -119,21 +132,47 @@ public class EditarPerfil extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        prbSubidaDatos.setProgress(0);
+                                    }
+                                },500);
 
                                 Toast.makeText(EditarPerfil.this,"Carga Exitosa",Toast.LENGTH_LONG).show();
                                 refArchivo.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                                        String email = user.getEmail();
+
                                         Uri url= uri;
-                                        String datosUrl = url.toString();
-                                        //refUsuarioBD.
-                                        //refUsuarioBD.push().setValue(nuevoUsuario);
-                                        //Productos prd = new Productos(datosNombre,datosPrecio,datosDescripcion,datosUrl);
-                                        //refDatabase.push().setValue(prd);
+                                        String pathUrl = url.toString();
 
-                                        //Intent intent = new Intent(AgregarProducto.this,MainActivity.class);
-                                       // startActivity(intent);
+                                        usuario.put("Nombre", nombre);
+                                        usuario.put("Apellidos", apellidos);
+                                        usuario.put("Ciudad", ciudad);
+                                        usuario.put("Telefono",telefono);
+                                        usuario.put("Primaria",primaria);
+                                        usuario.put("Secundaria",secundaria);
+                                        usuario.put("Universidad",universidad);
+                                        usuario.put("Url",pathUrl);
 
+                                        DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_PERFILES).document(email);
+
+                                        reference.update(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Intent intent = new Intent(EditarPerfil.this,MainActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }else{
+                                                    Toast.makeText(EditarPerfil.this,"Actualización de datos fallida",Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
                                     }
                                 });
 
@@ -143,6 +182,14 @@ public class EditarPerfil extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(EditarPerfil.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                btnAceptar.setEnabled(false);
+                                double progreso = (100.00*taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                                prbSubidaDatos.setProgress((int) progreso);
                             }
                         });
 
