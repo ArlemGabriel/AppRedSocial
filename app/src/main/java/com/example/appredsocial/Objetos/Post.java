@@ -13,6 +13,10 @@ public class Post {
     int hora;
     int segundos;
 
+    public Post(){
+
+    }
+
     public Post(String correoUsuario, String urlImagen, String descripcion, int idPost, int anno, int mes, int dia, int hora, int segundos) {
         this.correoUsuario = correoUsuario;
         this.urlImagen = urlImagen;

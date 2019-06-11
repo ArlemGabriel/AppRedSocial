@@ -12,8 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.appredsocial.Objetos.Post;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.synnapps.carouselview.CarouselView;
+
+import java.util.ArrayList;
 
 public class PerfilFragment extends Fragment {
     View rootView;
@@ -30,11 +38,7 @@ public class PerfilFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView= inflater.inflate(R.layout.fragment_perfil, container, false);
 
-        recyclerView = rootView.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
+        inicializarRecyclerView();
 
         firebaseAuth = FirebaseAuth.getInstance();
         txtNombre = rootView.findViewById(R.id.txtNombre);
@@ -42,6 +46,41 @@ public class PerfilFragment extends Fragment {
         String current = firebaseAuth.getCurrentUser().getEmail();
         txtNombre.setText(current);
 
+
+
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        return rootView;
+    }
+
+    private void inicializarRecyclerView(){
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        final ArrayList<Post> posts=new ArrayList<Post>();
+        firebaseFirestore.collection("Publicaciones").document(firebaseAuth.getCurrentUser().getEmail()).collection("Publicacion").get()
+            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                        Post post=new Post();
+                        post.setCorreoUsuario(documentSnapshot.getString("Email"));
+                        post.setDescripcion("Prueba");
+                        posts.add(post);
+                    }
+                }
+            });
+        recyclerView.setAdapter(new AdaptadorPosts(getContext(),posts,firebaseAuth));
+    }
+
+    private void CarruselFotos(){
         /*Codigo del carrusel de fotos
         carouselView = findViewById(R.id.carrouselView);
         final Drawable[] sampleImages = {};     //Las fotos que aparecen en el carrusel de fotos
@@ -68,15 +107,5 @@ public class PerfilFragment extends Fragment {
                 //Abrir pantalla de esa foto
             }
         });*/
-
-        FloatingActionButton fab = rootView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        return rootView;
     }
 }
