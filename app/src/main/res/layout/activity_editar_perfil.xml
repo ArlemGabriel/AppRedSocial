@@ -84,7 +84,7 @@
             android:textColorLink="#009688" />
 
         <EditText
-            android:id="@+id/txtFechaNac"
+            android:id="@+id/lblFechaNacimiento"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:ems="10"
@@ -131,13 +131,6 @@
             android:textColorHint="#009688"
             android:textColorLink="#009688" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="-2dp"
-            android:layout_marginBottom="2dp" />
 
 
         <RadioGroup
