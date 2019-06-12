@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NuevoPost"></activity>
+        <activity android:name=".PerfilActivity"></activity>
+        <activity android:name=".NuevoPost" />
         <activity android:name=".EditarPerfil" />
         <activity android:name=".RecuperarContrasena" />
         <activity

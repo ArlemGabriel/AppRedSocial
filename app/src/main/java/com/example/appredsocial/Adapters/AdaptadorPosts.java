@@ -2,6 +2,7 @@ package com.example.appredsocial.Adapters;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appredsocial.Objetos.Post;
+import com.example.appredsocial.PerfilActivity;
 import com.example.appredsocial.R;
 import com.example.appredsocial.Referencias.ReferenciasFirebase;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -84,6 +86,19 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((Item)holder).cantLikes.setText(String.valueOf(posts.get(position).getCantLikes()));
         ((Item)holder).cantDislikes.setText(String.valueOf(posts.get(position).getCantDislikes()));//*/
 
+        ((Item)holder).nombre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirPerfil(posts.get(position).getCorreoUsuario());
+            }
+        });
+
+        ((Item)holder).fotoPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirPerfil(posts.get(position).getCorreoUsuario());
+            }
+        });
         ((Item)holder).darLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -230,6 +245,13 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }else
             ((Item)holder).imagenPublicacion.setImageURI(null);
     }
+
+    private void abrirPerfil(String correo){
+        Intent i = new Intent(context, PerfilActivity.class);
+        i.putExtra("Email",correo);
+        context.startActivity(i);
+    }
+
 
     @Override
     public int getItemCount() {
