@@ -61,7 +61,6 @@ public class AdaptadorSolicitudes extends RecyclerView.Adapter<AdaptadorSolicitu
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.i("Error: ",e.getMessage());
-                        //Toast.makeText(PerfilFragment.this,"Carga de perfil fallida",Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -78,6 +77,7 @@ public class AdaptadorSolicitudes extends RecyclerView.Adapter<AdaptadorSolicitu
         return contexto;
     }
     /*public void deleteItem(int position){
+
         String key = keys.get(position);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(ReferenciasFirebase.REFERENCIA_BASEDATOSFIREBASE);
         ref.child(key).removeValue();
