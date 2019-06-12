@@ -6,6 +6,7 @@ public class Amigo {
     private String nombre;
     private String apellido;
     private String urlImagen;
+    private String email;
 
     public Amigo(){
     }
@@ -14,6 +15,14 @@ public class Amigo {
         this.nombre = nombre;
         this.apellido = apellido;
         this.urlImagen = urlImagen;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNombreCompleto(){
