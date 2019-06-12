@@ -5,10 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.synnapps.carouselview.CarouselView;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +54,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeFrag(Fragment frag){
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,frag).commit();
+    }
+
+    //------- Agregar menu de opciones --------
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.options_menu,menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.logOut: {
+                cerrarSesion();
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void cerrarSesion() {
+        FirebaseAuth.getInstance()
+                .signOut();
+                finish();
+
+
+
     }
 
 }
