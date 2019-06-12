@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appredsocial.Adapters.AdaptadorPosts;
 import com.example.appredsocial.Referencias.ReferenciasFirebase;
@@ -130,23 +131,17 @@ public class PerfilFragment extends Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int posicion = viewHolder.getAdapterPosition();
-                /***
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
-
+                final int posicion = viewHolder.getAdapterPosition();
+                refFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").document(posts.get(posicion).getIdPost()).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        posts.remove(posts.get(posicion));
+                        adaptadorPosts.notifyDataSetChanged();
+                        ActualizarLabelNoPublicaciones();
+                        Toast.makeText(getContext(),"Se elimino correctamente la publicacion",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }).attachToRecyclerView(recyclerView);
 
