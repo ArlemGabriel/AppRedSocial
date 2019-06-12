@@ -6,7 +6,7 @@ public class Post {
     String correoUsuario;
     String urlImagen;
     String descripcion;
-    int idPost;
+    String idPost;
     int cantLikes;
     int cantDislikes;
     int anno;
@@ -74,33 +74,6 @@ public class Post {
         return "";
     }
 
-    public Post(String correoUsuario, String urlImagen, String descripcion, int idPost, int anno, int mes, int dia, int hora, int segundos) {
-        this.correoUsuario = correoUsuario;
-        this.urlImagen = urlImagen;
-        this.descripcion = descripcion;
-        this.idPost = idPost;
-        this.cantLikes = 0;
-        this.cantDislikes = 0;
-        this.anno = anno;
-        this.mes = mes;
-        this.dia = dia;
-        this.hora = hora;
-        this.segundos = segundos;
-    }
-
-    public Post(String correoUsuario, String descripcion, int idPost, int anno, int mes, int dia, int hora, int segundos) {
-        this.correoUsuario = correoUsuario;
-        this.urlImagen = "No imagen";
-        this.descripcion = descripcion;
-        this.idPost = idPost;
-        this.cantLikes = 0;
-        this.cantDislikes = 0;
-        this.anno = anno;
-        this.mes = mes;
-        this.dia = dia;
-        this.hora = hora;
-        this.segundos = segundos;
-    }
 
     public String getCorreoUsuario() {
         return correoUsuario;
@@ -126,11 +99,11 @@ public class Post {
         this.descripcion = descripcion;
     }
 
-    public int getIdPost() {
+    public String getIdPost() {
         return idPost;
     }
 
-    public void setIdPost(int idPost) {
+    public void setIdPost(String idPost) {
         this.idPost = idPost;
     }
 

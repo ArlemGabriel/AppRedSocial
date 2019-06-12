@@ -25,6 +25,7 @@ import com.example.appredsocial.Objetos.Post;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -142,7 +143,7 @@ public class PerfilFragment extends Fragment {
                     }
                 });
 
-        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").limit(3).get()
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").orderBy("id", Query.Direction.ASCENDING).limit(10).get()
             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -160,6 +161,7 @@ public class PerfilFragment extends Fragment {
                         post.setCantLikes(Integer.valueOf(documentSnapshot.get("Likes").toString()));
                         post.setCantDislikes(Integer.valueOf(documentSnapshot.get("Dislikes").toString()));
                         post.setUrlImagen(documentSnapshot.getString("ImgUrl"));
+                        post.setIdPost(documentSnapshot.getString("id"));
                         ultimaCarga=documentSnapshot;
                         posts.add(post);
                     }
@@ -171,7 +173,7 @@ public class PerfilFragment extends Fragment {
 
     private void cargarMasPosts() {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").startAfter(ultimaCarga).limit(3).get()
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").orderBy("id", Query.Direction.ASCENDING).startAfter(ultimaCarga).limit(10).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -189,6 +191,7 @@ public class PerfilFragment extends Fragment {
                             post.setCantLikes(Integer.valueOf(documentSnapshot.get("Likes").toString()));
                             post.setCantDislikes(Integer.valueOf(documentSnapshot.get("Dislikes").toString()));
                             post.setUrlImagen(documentSnapshot.getString("ImgUrl"));
+                            post.setIdPost(documentSnapshot.getString("id"));
                             ultimaCarga = documentSnapshot;
                             posts.add(post);
                         }

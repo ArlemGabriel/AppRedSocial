@@ -31,7 +31,7 @@
             android:layout_height="60dp"
             android:ems="10"
             android:fontFamily="sans-serif-condensed"
-            android:hint="Nombre"
+            android:hint="Descripción"
             android:inputType="textMultiLine"
             android:textColor="#009688"
             android:textColorHint="#009688"

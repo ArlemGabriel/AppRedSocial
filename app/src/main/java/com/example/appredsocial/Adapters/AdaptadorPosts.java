@@ -14,11 +14,15 @@ import android.widget.Toast;
 
 import com.example.appredsocial.Objetos.Post;
 import com.example.appredsocial.R;
+import com.example.appredsocial.Referencias.ReferenciasFirebase;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -27,6 +31,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
@@ -51,7 +57,7 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         final StorageReference firebaseStorage=FirebaseStorage.getInstance().getReference();
         firebaseFirestore.collection("Perfiles").document(posts.get(position).getCorreoUsuario()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -75,6 +81,146 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         ((Item)holder).descripcion.setText(posts.get(position).getDescripcion());
         ((Item)holder).tiempoPublicacion.setText(posts.get(position).tiempoDePublicacion());
+        ((Item)holder).cantLikes.setText(String.valueOf(posts.get(position).getCantLikes()));
+        ((Item)holder).cantDislikes.setText(String.valueOf(posts.get(position).getCantDislikes()));//*/
+
+        ((Item)holder).darLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DocumentReference reference = firebaseFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(posts.get(position).getCorreoUsuario()).collection("Post").document(posts.get(position).getIdPost());
+                final int cant=posts.get(position).getCantLikes()+1;
+                final String emailCurrentUser=firebaseAuth.getCurrentUser().getEmail();
+
+                if(cant-1>0) {
+                    reference.collection("Likes").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            boolean existe=false;
+                            for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                                if(emailCurrentUser.equals(documentSnapshot.getId()))
+                                    existe =true;
+                            }
+
+                            if(!existe){
+                                Map<String, Object> publicacion = new HashMap<>();
+                                publicacion.put("Likes", cant);
+
+                                Map<String, Object> usuario = new HashMap<>();
+                                usuario.put("Email", emailCurrentUser);
+
+
+                                reference.collection("Likes").document(emailCurrentUser).set(usuario);
+
+                                reference.update(publicacion).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(context, "Se ha dado me gusta", Toast.LENGTH_SHORT).show();
+                                        posts.get(position).setCantLikes(cant);
+                                    }
+                                })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }else
+                                Toast.makeText(context, "Ya ha dado me gusta a esta publicación", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                else {
+                    Map<String, Object> publicacion = new HashMap<>();
+                    publicacion.put("Likes", cant);
+
+                    Map<String, Object> usuario = new HashMap<>();
+                    usuario.put("Email", emailCurrentUser);
+
+
+                    reference.collection("Likes").document(emailCurrentUser).set(usuario);
+
+                    reference.update(publicacion).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Se ha dado me gusta", Toast.LENGTH_SHORT).show();
+                            posts.get(position).setCantLikes(cant);
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+            }
+        });
+
+        ((Item)holder).darDislike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DocumentReference reference = firebaseFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(posts.get(position).getCorreoUsuario()).collection("Post").document(String.valueOf(posts.get(position).getIdPost()));
+                final String emailCurrentUser=firebaseAuth.getCurrentUser().getEmail();
+                final int cant=posts.get(position).getCantDislikes()+1;
+
+                if(cant-1>0) {
+                    reference.collection("Dislikes").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            boolean existe=false;
+                            for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                                if(emailCurrentUser.equals(documentSnapshot.getId()))
+                                    existe =true;
+                            }
+
+                            if(!existe){
+                                Map<String, Object> publicacion = new HashMap<>();
+                                publicacion.put("Dislikes", cant);
+
+                                Map<String, Object> usuario = new HashMap<>();
+                                usuario.put("Email", firebaseAuth.getCurrentUser().getEmail());
+
+
+
+                                reference.collection("Dislikes").document(firebaseAuth.getCurrentUser().getEmail()).set(usuario);
+                                reference.update(publicacion).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(context,"Se ha dado no me gusta",Toast.LENGTH_SHORT).show();
+                                        posts.get(position).setCantDislikes(cant);
+                                    }
+                                });
+                            }
+                            else
+                                Toast.makeText(context, "Ya ha dado no me gusta a esta publicación", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                else {
+                    Map<String, Object> publicacion = new HashMap<>();
+                    publicacion.put("Dislikes", cant);
+
+                    Map<String, Object> usuario = new HashMap<>();
+                    usuario.put("Email", firebaseAuth.getCurrentUser().getEmail());
+
+
+                    reference.collection("Dislikes").document(firebaseAuth.getCurrentUser().getEmail()).set(usuario);
+                    reference.update(publicacion).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Se ha dado no me gusta", Toast.LENGTH_SHORT).show();
+                            posts.get(position).setCantDislikes(cant);
+                        }
+                    });
+                }
+
+            }
+        });
+
+
         String url="";
         url=posts.get(position).getUrlImagen();
         if(!url.isEmpty() && !url.equals("null")) {
@@ -91,10 +237,14 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public class Item extends RecyclerView.ViewHolder{
-        TextView nombre, tiempoPublicacion, descripcion;
-        ImageView fotoPerfil,imagenPublicacion;
+        TextView nombre, tiempoPublicacion, descripcion, cantLikes, cantDislikes;
+        ImageView fotoPerfil,imagenPublicacion, darLike, darDislike;
         public Item(View itemView) {
             super(itemView);
+            cantLikes = itemView.findViewById(R.id.cantLikes);
+            cantDislikes = itemView.findViewById(R.id.cantDislikes);
+            darLike=itemView.findViewById(R.id.btnLike);
+            darDislike=itemView.findViewById(R.id.btnDislike);//*/
             nombre= (TextView) itemView.findViewById(R.id.textNombreUsuario);
             tiempoPublicacion= (TextView) itemView.findViewById(R.id.textTimePassed);
             descripcion= (TextView) itemView.findViewById(R.id.textNewPostDescription);

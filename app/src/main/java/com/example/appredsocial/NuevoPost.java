@@ -135,6 +135,7 @@ public class NuevoPost extends AppCompatActivity {
                                         int segundos=getSecond();
                                         String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
 
+                                        nuevoPost.put("id", idPost);
                                         nuevoPost.put("EmailUsuario", firebaseAuth.getCurrentUser().getEmail());
                                         nuevoPost.put("Descripcion", descripcion);
                                         nuevoPost.put("Likes", 0);
@@ -194,6 +195,7 @@ public class NuevoPost extends AppCompatActivity {
                 int segundos=getSecond();
                 String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
 
+                nuevoPost.put("id", idPost);
                 nuevoPost.put("EmailUsuario", firebaseAuth.getCurrentUser().getEmail());
                 nuevoPost.put("Descripcion", descripcion);
                 nuevoPost.put("Likes", 0);
