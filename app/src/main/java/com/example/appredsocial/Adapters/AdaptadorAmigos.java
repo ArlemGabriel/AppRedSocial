@@ -1,6 +1,7 @@
 package com.example.appredsocial.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.appredsocial.Objetos.Amigo;
+import com.example.appredsocial.PerfilActivity;
 import com.example.appredsocial.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +48,7 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         ((Item)holder).textNombre.setText(amigos.get(position).getNombreCompleto());
         String url = amigos.get(position).getUrlImagen();
         if(!url.isEmpty() && !url.equals("null")){
@@ -56,6 +58,12 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }else{
             ((Item)holder).imgFoto.setImageURI(null);
         }
+        ((Item)holder).itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirPerfil(amigos.get(position).getEmail());
+            }
+        });
     }
 
     @Override
@@ -64,7 +72,11 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void deleteAmigo(int posicion){
         //Borrar amigo de la base de datos
     }
-
+    private void abrirPerfil(String correo){
+        Intent i = new Intent(context, PerfilActivity.class);
+        i.putExtra("Email",correo);
+        context.startActivity(i);
+    }
     public class Item extends RecyclerView.ViewHolder{
         TextView textNombre;
         ImageView imgFoto;

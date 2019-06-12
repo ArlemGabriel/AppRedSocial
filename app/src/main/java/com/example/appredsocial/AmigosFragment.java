@@ -70,6 +70,8 @@ public class AmigosFragment extends Fragment {
             }
         }, 500);
 
+
+
         return rootView;
     }
 
@@ -96,6 +98,7 @@ public class AmigosFragment extends Fragment {
                                     String url = documentSnapshot2.getString("Url");
                                     amigo.setUrlImagen(url);
                                     Log.i("Info", amigo.getNombreCompleto());
+                                    amigo.setEmail(documentSnapshot2.getString("Email"));
                                 }
                             });
                             amigos.add(amigo);
