@@ -94,6 +94,17 @@ public class NotificacionesFragment extends Fragment {
                                     Toast.makeText(getContext(),"Solicitud de Amistad Aceptada",Toast.LENGTH_SHORT).show();
                                 }
                             });
+                    firebaseFirestore.collection("Amigos")
+                            .document(solicitudes.get(posicion).getCorreo())
+                            .set(firebaseAuth.getCurrentUser().getEmail())
+
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    adaptador.notifyDataSetChanged();
+                                    //Toast.makeText(getContext(),"Solicitud de Amistad Aceptada",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                     firebaseFirestore.collection("Solicitudes")
                             .document(firebaseAuth.getCurrentUser().getEmail())
                             .collection("Pendientes").document(solicitudes.get(posicion).getId()).delete()

@@ -31,7 +31,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AmigosFragment extends Fragment {
     View rootView;
@@ -70,7 +72,32 @@ public class AmigosFragment extends Fragment {
             }
         }, 1000);
 
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                if(direction==4){
+                    final int posicion = viewHolder.getAdapterPosition();
+                    refFirestore.collection("Amigos")
+                            .document(firebaseAuth.getCurrentUser().getEmail())
+                            .collection("Amigo").document(amigos.get(posicion).getEmail()).delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    amigos.remove(amigos.get(posicion));
+                                    adaptadorAmigos.notifyDataSetChanged();
+                                    Toast.makeText(getContext(),"Amigo Eliminado",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+
+            }
+        }).attachToRecyclerView(recyclerView);
 
         return rootView;
     }
