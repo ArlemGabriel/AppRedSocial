@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.example.appredsocial.Adapters.AdaptadorComentarios;
@@ -18,12 +19,15 @@ import com.example.appredsocial.Objetos.Comentario;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ComentarioActivity extends AppCompatActivity {
 
@@ -79,7 +83,23 @@ public class ComentarioActivity extends AppCompatActivity {
     }
 
     private void agregarComentario() {
-        
+        if(!txtComentario.getText().toString().trim().isEmpty()) {
+            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+            final Map<String, Object> nuevoComentario = new HashMap<>();
+            nuevoComentario.put("Email", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            nuevoComentario.put("Comentario", txtComentario.getText().toString());
+
+            firebaseFirestore.collection("Posts").document(correoUsuario).collection("Post").document(idPost).collection("Comentarios").add(nuevoComentario)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(getApplicationContext(),"Se ha registrado el comentario exitosamente", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else
+            Toast.makeText(this,"Debe ingresar algun comentario", Toast.LENGTH_SHORT).show();
+
     }
 
     private void inicializarRecyclerView(){
@@ -92,8 +112,8 @@ public class ComentarioActivity extends AppCompatActivity {
                         for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             final Comentario comentario = new Comentario();
 
-                            String mailComentario = documentSnapshot.getId();
-                            comentario.setComentario("Comentario");
+                            String mailComentario = documentSnapshot.getString("Email");
+                            comentario.setComentario(documentSnapshot.getString("Comentario"));
 
                             refFirestore.collection("Perfiles").document(mailComentario).
                                     get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

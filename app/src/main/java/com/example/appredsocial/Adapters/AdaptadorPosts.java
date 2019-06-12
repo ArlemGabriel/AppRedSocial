@@ -91,6 +91,8 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(context, ComentarioActivity.class);
+                i.putExtra("Email", posts.get(position).getCorreoUsuario());
+                i.putExtra("idPost", posts.get(position).getIdPost());
                 context.startActivity(i);
             }
         });
