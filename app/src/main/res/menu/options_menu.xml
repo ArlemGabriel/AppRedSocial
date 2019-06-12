@@ -7,4 +7,8 @@
         android:title="Cerrar sesión"
         android:orderInCategory="100"    />
 
+    <item android:id="@+id/deleteAccount"
+        android:title="Eliminar Cuenta"
+        android:orderInCategory="100"    />
+
 </menu>

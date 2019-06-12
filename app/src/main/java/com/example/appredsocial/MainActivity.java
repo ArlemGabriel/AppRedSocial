@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.appredsocial.Objetos.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,9 +74,24 @@ public class MainActivity extends AppCompatActivity {
             case R.id.logOut: {
                 cerrarSesion();
             }
+            case R.id.deleteAccount: {
+                borrarCuenta();
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void borrarCuenta() {
+        FirebaseFirestore firebaseFirestore=FirebaseFirestore.getInstance();
+
+        firebaseFirestore.collection("Posts").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+        firebaseFirestore.collection("Amigos").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+        firebaseFirestore.collection("Perfiles").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+        firebaseFirestore.collection("Solicitudes").document(FirebaseAuth.getInstance().getCurrentUser().getEmail()).delete();
+        FirebaseAuth.getInstance().getCurrentUser().delete();
+        Toast.makeText(this,"Se elimino la cuenta",Toast.LENGTH_SHORT).show();
+        cerrarSesion();
     }
 
     public void cerrarSesion() {
