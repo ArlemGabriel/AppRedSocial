@@ -2,11 +2,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@android:color/darker_gray">
+
+    <LinearLayout
+        android:id="@+id/layoutBusquedaPerfiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/txtBusquedaPerfiles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:maxLines="1"
+            android:inputType="text"/>
+        <Button
+            android:id="@+id/btnBusquedaPerfiles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="buscar"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewPerfil"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/layoutBusquedaPerfiles"/>
+
     <TextView
+        android:id="@+id/noPerfiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:text="Fragment Buscar"
+        android:text="No hay perfiles"
+        android:visibility="invisible"
+        android:gravity="center"
         android:layout_centerInParent="true"/>
 
 </RelativeLayout>

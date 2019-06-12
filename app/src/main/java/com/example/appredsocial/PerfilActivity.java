@@ -28,6 +28,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
@@ -211,8 +212,9 @@ public class PerfilActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             String url = documentSnapshot.getString("ImgUrl");
-
-                            urlPosts.add(url);
+                            if(!url.equals("null")){
+                                urlPosts.add(url);
+                            }
                         }
                         cargarCarrusel();
 
@@ -221,9 +223,9 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void cargarCarrusel(){
-        Log.i("Info", "cantidad de paginas: "+String.valueOf(urlPosts.size()));
+        //Log.i("Info", "cantidad de paginas: "+String.valueOf(urlPosts.size()));
         carouselView.setPageCount(urlPosts.size()); //La cantidad de paginas del carrusel
-        Log.i("Info", "Sigue");
+        //Log.i("Info", "Sigue");
 
         // Que hace cuando se cambia la imagen
         carouselView.setImageListener(new ImageListener() {
@@ -233,6 +235,15 @@ public class PerfilActivity extends AppCompatActivity {
             }
         });
 
+        carouselView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                Intent intent  = new Intent(getApplicationContext(), DetallePost.class);
+                intent.putExtra("pos", String.valueOf(position));
+                intent.putExtra("correo", correoUsuario);
+                startActivity(intent);
+            }
+        });
     }
 
     private void cargarPerfil() {
