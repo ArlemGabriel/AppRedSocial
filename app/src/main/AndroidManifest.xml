@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DetallePost"></activity>
+        <activity android:name=".AuxEditarPerfil"></activity>
+        <activity android:name=".DetallePost" />
         <activity android:name=".PerfilActivity" />
         <activity android:name=".NuevoPost" />
         <activity android:name=".EditarPerfil" />

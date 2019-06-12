@@ -146,6 +146,14 @@ public class PerfilFragment extends Fragment {
         }).attachToRecyclerView(recyclerView);
 
         ActualizarLabelNoPublicaciones();
+
+        imageViewFotoPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),AuxEditarPerfil.class);
+                startActivity(intent);
+            }
+        });
         return rootView;
     }
 
