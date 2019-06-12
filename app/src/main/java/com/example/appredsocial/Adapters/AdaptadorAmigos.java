@@ -28,19 +28,15 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public AdaptadorAmigos(Context context, ArrayList<Amigo> amigos, FirebaseAuth firebaseAuth,
                            FirebaseFirestore firebaseFirestore){
-        Log.i("Info", "Inicializa el adaptador");
         this.context = context;
         this.amigos = amigos;
         this.firebaseAuth = firebaseAuth;
         this.firebaseFirestore = firebaseFirestore;
-        for (int i = 0; i<this.amigos.size(); i++){
-            Log.i("Info", "\t"+amigos.get(i).getNombreCompleto());
-        }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i("Info", "Inicializa");
+        //Log.i("Info", "Inicializa");
         LayoutInflater inflater = LayoutInflater.from(context);
         View row = inflater.inflate(R.layout.item_amigos, parent, false);
         Item item = new Item(row);
@@ -88,5 +84,6 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgFoto = (ImageView) viewItem.findViewById(R.id.imgFotoAmigos);
         }
     }
+
 
 }
