@@ -68,7 +68,7 @@ public class AmigosFragment extends Fragment {
             public void run() {
                 adaptadorAmigos.notifyDataSetChanged();
             }
-        }, 500);
+        }, 1000);
 
 
 

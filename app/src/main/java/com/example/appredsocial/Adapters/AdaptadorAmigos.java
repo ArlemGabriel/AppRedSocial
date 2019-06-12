@@ -51,13 +51,13 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         ((Item)holder).textNombre.setText(amigos.get(position).getNombreCompleto());
         String url = amigos.get(position).getUrlImagen();
-        if(!url.isEmpty() && !url.equals("null")){
+        
             ((Item)holder).imgFoto.getLayoutParams().height=450;
             ((Item)holder).imgFoto.requestLayout();
             Picasso.with(context).load(url).centerInside().fit().into(((Item)holder).imgFoto);
-        }else{
+
             ((Item)holder).imgFoto.setImageURI(null);
-        }
+
         ((Item)holder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
