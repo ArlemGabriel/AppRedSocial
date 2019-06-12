@@ -245,8 +245,9 @@ public class PerfilFragment extends Fragment {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             String url = documentSnapshot.getString("ImgUrl");
-
-                            urlPosts.add(url);
+                            if(!url.equals("null")){
+                                urlPosts.add(url);
+                            }
                         }
                         cargarCarrusel();
 
@@ -255,16 +256,25 @@ public class PerfilFragment extends Fragment {
     }
 
     private void cargarCarrusel(){
-        Log.i("Info", "cantidad de paginas: "+String.valueOf(urlPosts.size()));
+        //Log.i("Info", "cantidad de paginas: "+String.valueOf(urlPosts.size()));
         carouselView.setPageCount(urlPosts.size()); //La cantidad de paginas del carrusel
-        Log.i("Info", "Sigue");
+        //Log.i("Info", "Sigue");
 
         // Que hace cuando se cambia la imagen
         carouselView.setImageListener(new ImageListener() {
             @Override
             public void setImageForPosition(int position, ImageView imageView) {
-                //imageView.setImageResource(R.drawable.icon_amigos);
                 Picasso.with(getContext()).load(urlPosts.get(position)).centerCrop().fit().into(imageView);
+            }
+        });
+
+        carouselView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                Intent intent  = new Intent(getContext(), DetallePost.class);
+                intent.putExtra("pos", String.valueOf(position));
+                intent.putExtra("correo", firebaseAuth.getCurrentUser().getEmail());
+                startActivity(intent);
             }
         });
 
