@@ -127,15 +127,14 @@ public class NuevoPost extends AppCompatActivity {
 
                                         Uri url= uri;
                                         String pathUrl = url.toString();
-                                        int anno=getYear();
-                                        int mes=getMonth();
-                                        int dia=getDay();
-                                        int hora=getHour();
-                                        int minutos=getMinute();
+                                        int anno= Integer.parseInt(getYear());
+                                        int mes= Integer.parseInt(getMonth());
+                                        int dia= Integer.parseInt(getDay());
+                                        int hora= Integer.parseInt(getHour());
+                                        int minutos= Integer.parseInt(getMinute());
                                         int segundos=getSecond();
-                                        String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
 
-                                        nuevoPost.put("id", idPost);
+
                                         nuevoPost.put("EmailUsuario", firebaseAuth.getCurrentUser().getEmail());
                                         nuevoPost.put("Descripcion", descripcion);
                                         nuevoPost.put("Likes", 0);
@@ -147,6 +146,18 @@ public class NuevoPost extends AppCompatActivity {
                                         nuevoPost.put("Minutos", minutos);
                                         nuevoPost.put("Segundos", segundos);
                                         nuevoPost.put("ImgUrl",pathUrl);
+
+                                        if(mes<10)
+                                            anno*=10;
+                                        if(dia<10)
+                                            mes*=10;
+                                        if(hora<10)
+                                            dia*=10;
+                                        if(segundos<10)
+                                            hora*=10;
+                                        String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
+
+                                        nuevoPost.put("id", idPost);
 
                                         DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").document(idPost);
 
@@ -187,15 +198,13 @@ public class NuevoPost extends AppCompatActivity {
                 String email = user.getEmail();
 
                 String pathUrl = "null";
-                int anno=getYear();
-                int mes=getMonth();
-                int dia=getDay();
-                int hora=getHour();
-                int minutos=getMinute();
+                int anno= Integer.parseInt(getYear());
+                int mes= Integer.parseInt(getMonth());
+                int dia= Integer.parseInt(getDay());
+                int hora= Integer.parseInt(getHour());
+                int minutos= Integer.parseInt(getMinute());
                 int segundos=getSecond();
-                String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
 
-                nuevoPost.put("id", idPost);
                 nuevoPost.put("EmailUsuario", firebaseAuth.getCurrentUser().getEmail());
                 nuevoPost.put("Descripcion", descripcion);
                 nuevoPost.put("Likes", 0);
@@ -207,6 +216,18 @@ public class NuevoPost extends AppCompatActivity {
                 nuevoPost.put("Minutos", minutos);
                 nuevoPost.put("Segundos", segundos);
                 nuevoPost.put("ImgUrl",pathUrl);
+
+                if(mes<10)
+                    anno*=10;
+                if(dia<10)
+                    mes*=10;
+                if(hora<10)
+                    dia*=10;
+                if(segundos<10)
+                    hora*=10;
+                String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
+
+                nuevoPost.put("id", idPost);
 
                 DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").document(idPost);
 
@@ -233,29 +254,29 @@ public class NuevoPost extends AppCompatActivity {
     }
 
     //---------------------- Obtener Fecha ---------------------------
-    private int getHour(){
+    private String getHour(){
         Calendar c = Calendar.getInstance();
-        int Hora = c.get(Calendar.HOUR_OF_DAY);
+        String Hora = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
         return Hora;
     }
-    private int getMinute(){
+    private String getMinute(){
         Calendar c = Calendar.getInstance();
-        int Minuto = c.get(Calendar.MINUTE);
+        String Minuto = String.valueOf(c.get(Calendar.MINUTE));
         return Minuto;
     }
-    private int getDay(){
+    private String getDay(){
         Calendar c = Calendar.getInstance();
-        int Dia = c.get(Calendar.DAY_OF_MONTH);
+        String Dia = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
         return Dia;
     }
-    private int getMonth(){
+    private String getMonth(){
         Calendar c = Calendar.getInstance();
-        int Mes = c.get(Calendar.MONTH)+1;
+        String Mes = String.valueOf(c.get(Calendar.MONTH)+1);
         return Mes;
     }
-    private int getYear(){
+    private String getYear(){
         Calendar c = Calendar.getInstance();
-        int Año = c.get(Calendar.YEAR);
+        String Año = String.valueOf(c.get(Calendar.YEAR));
         return Año;
     }
     private int getSecond(){
