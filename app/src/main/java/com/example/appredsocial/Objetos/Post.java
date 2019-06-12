@@ -1,5 +1,7 @@
 package com.example.appredsocial.Objetos;
 
+import java.util.Calendar;
+
 public class Post {
     String correoUsuario;
     String urlImagen;
@@ -24,6 +26,52 @@ public class Post {
 
     public void setMinutos(int minutos) {
         this.minutos = minutos;
+    }
+
+    public String tiempoDePublicacion(){
+
+        if(anno<getAnno()){
+            int Result=getAnno()-anno;
+            if(Result==1){
+                return Result + " Año";
+            }
+            else {
+                return Result + " Años";
+            }
+        }
+        else {
+            if (dia < getDay()) {
+                int Result = getDay() - dia;
+                if (Result == 1) {
+                    return Result + " Dia";
+                } else {
+                    return Result + " Dias";
+                }
+            } else {
+                if (dia == getDay()) {
+                    if (hora < getHour()) {
+                        int Result = getHour() - hora;
+                        if (Result == 1) {
+                            return Result + " Hora";
+                        } else {
+                            return Result + " Horas";
+                        }
+                    } else {
+                        if (minutos < getMinute()) {
+                            int Result = getMinute() - minutos;
+                            if (Result == 1) {
+                                return Result + " Minuto";
+                            } else {
+                                return Result + " Minutos";
+                            }
+                        } else {
+                            return "Ahora";
+                        }
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     public Post(String correoUsuario, String urlImagen, String descripcion, int idPost, int anno, int mes, int dia, int hora, int segundos) {
@@ -140,5 +188,37 @@ public class Post {
 
     public void setSegundos(int segundos) {
         this.segundos = segundos;
+    }
+
+    //---------------------- Obtener Fecha ---------------------------
+    private int getHour(){
+        Calendar c = Calendar.getInstance();
+        int Hora = c.get(Calendar.HOUR_OF_DAY);
+        return Hora;
+    }
+    private int getMinute(){
+        Calendar c = Calendar.getInstance();
+        int Minuto = c.get(Calendar.MINUTE);
+        return Minuto;
+    }
+    private int getDay(){
+        Calendar c = Calendar.getInstance();
+        int Dia = c.get(Calendar.DAY_OF_MONTH);
+        return Dia;
+    }
+    private int getMonth(){
+        Calendar c = Calendar.getInstance();
+        int Mes = c.get(Calendar.MONTH)+1;
+        return Mes;
+    }
+    private int getYear(){
+        Calendar c = Calendar.getInstance();
+        int Año = c.get(Calendar.YEAR);
+        return Año;
+    }
+    private int getSecond(){
+        Calendar c = Calendar.getInstance();
+        int Segundo = c.get(Calendar.SECOND);
+        return Segundo;
     }
 }

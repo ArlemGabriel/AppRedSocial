@@ -1,16 +1,20 @@
-package com.example.appredsocial;
+package com.example.appredsocial.Adapters;
 
 import android.content.ClipData;
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appredsocial.Objetos.Post;
+import com.example.appredsocial.R;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -28,11 +32,13 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
     Context context;
     ArrayList<Post>  posts;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore firebaseFirestore;
 
-    public AdaptadorPosts (Context context, ArrayList<Post> posts, FirebaseAuth firebaseAuth){
+    public AdaptadorPosts (Context context, ArrayList<Post> posts, FirebaseAuth firebaseAuth, FirebaseFirestore firebaseFirestore){
         this.context=context;
         this.posts=posts;
         this.firebaseAuth=firebaseAuth;
+        this.firebaseFirestore=firebaseFirestore;
     }
 
 
@@ -46,42 +52,35 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        StorageReference firebaseStorage=FirebaseStorage.getInstance().getReference();
-        final String[] nombre = {"*Nombre de usuario no encontrado*"};
-        final String[] urlImagen = new String[1];
-        int tiempoDesdePublicacion;
+        final StorageReference firebaseStorage=FirebaseStorage.getInstance().getReference();
         firebaseFirestore.collection("Perfiles").document(posts.get(position).getCorreoUsuario()).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                          @Override
+                                          public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                              String nombre = documentSnapshot.getString("Nombre") + " " + documentSnapshot.getString("Apellidos");
+                                              ((Item) holder).nombre.setText(nombre);
+                                              String urlImagen = documentSnapshot.getString("Url");
+                                              if(!urlImagen.isEmpty() && urlImagen!="null")
+                                                Picasso.with(context).load(urlImagen).fit().centerCrop().into(((Item) holder).fotoPerfil);
+                                          }
+                                      }
+                )
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        nombre[0] =documentSnapshot.getString("Nombre")+documentSnapshot.getString("Apellidos");
-                        urlImagen[0] =documentSnapshot.getString("Url");
+                    public void onFailure(@NonNull Exception e) {
+                        String error= e.getMessage();
+                        Toast.makeText(context,error,Toast.LENGTH_LONG).show();
                     }
                 });
 
-        try {
-            if(!urlImagen[0].isEmpty() && urlImagen!=null) {
-                StorageReference imgFotoPerfilRef = firebaseStorage.child(urlImagen[0]);
-                final File imgFotoPerfil = File.createTempFile("images", "jpg");
-                imgFotoPerfilRef.getFile(imgFotoPerfil)
-                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                Uri uri = Uri.fromFile(imgFotoPerfil);
-                                ((Item) holder).fotoPerfil.setBackground(null);
-                                ((Item) holder).fotoPerfil.setImageURI(uri);
-                            }
-                        });
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        ((Item)holder).nombre.setText(nombre[0]);
         ((Item)holder).descripcion.setText(posts.get(position).getDescripcion());
-
+        ((Item)holder).tiempoPublicacion.setText(posts.get(position).tiempoDePublicacion());
+        String url=posts.get(position).getUrlImagen();
+        if(!url.isEmpty() && !url.equals("null")) {
+            ((Item)holder).imagenPublicacion.getLayoutParams().height=450;
+            ((Item)holder).imagenPublicacion.requestLayout();
+            Picasso.with(context).load(url).centerInside().fit().into(((Item) holder).imagenPublicacion);
+        }
     }
 
     @Override

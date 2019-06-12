@@ -2,11 +2,9 @@ package com.example.appredsocial;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,36 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.appredsocial.Adapters.AdaptadorPosts;
 import com.example.appredsocial.Referencias.ReferenciasFirebase;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.example.appredsocial.Objetos.Post;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.synnapps.carouselview.CarouselView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import java.util.ArrayList;
 
@@ -98,23 +82,37 @@ public class PerfilFragment extends Fragment {
 
     private void inicializarRecyclerView(){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView = rootView.findViewById(R.id.recyclerViewPerfil);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         final ArrayList<Post> posts=new ArrayList<Post>();
-        firebaseFirestore.collection("Publicaciones").document(firebaseAuth.getCurrentUser().getEmail()).collection("Publicacion").get()
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").get()
             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                         Post post=new Post();
-                        post.setCorreoUsuario(documentSnapshot.getString("Email"));
-                        post.setDescripcion("Prueba");
+                        post.setCorreoUsuario(documentSnapshot.getString("EmailUsuario"));
+                        post.setDescripcion(documentSnapshot.getString("Descripcion"));
+                        post.setAnno(Integer.valueOf(documentSnapshot.get("Anno").toString()));
+                        post.setMes(Integer.valueOf(documentSnapshot.get("Mes").toString()));
+                        post.setDia(Integer.valueOf(documentSnapshot.get("Dia").toString()));
+                        post.setHora(Integer.valueOf(documentSnapshot.get("Hora").toString()));
+                        post.setMinutos(Integer.valueOf(documentSnapshot.get("Minutos").toString()));
+                        post.setSegundos(Integer.valueOf(documentSnapshot.get("Segundos").toString()));
+                        post.setCantLikes(Integer.valueOf(documentSnapshot.get("Likes").toString()));
+                        post.setCantDislikes(Integer.valueOf(documentSnapshot.get("Dislikes").toString()));
+                        post.setUrlImagen(documentSnapshot.getString("ImgUrl"));
                         posts.add(post);
                     }
                 }
             });
-        recyclerView.setAdapter(new AdaptadorPosts(getContext(),posts,firebaseAuth));
+        TextView noPublicaciones= rootView.findViewById(R.id.noPublicaciones);
+        if(posts.isEmpty())
+            noPublicaciones.setVisibility(View.VISIBLE);
+        else
+            noPublicaciones.setVisibility(View.INVISIBLE);
+        recyclerView.setAdapter(new AdaptadorPosts(getContext(),posts,firebaseAuth, firebaseFirestore));
     }
 
     private void CarruselFotos(){

@@ -117,6 +117,8 @@ public class NuevoPost extends AppCompatActivity {
                                 },500);
 
                                 Toast.makeText(NuevoPost.this,"Carga Exitosa",Toast.LENGTH_LONG).show();
+
+
                                 refArchivo.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
@@ -136,16 +138,16 @@ public class NuevoPost extends AppCompatActivity {
                                         nuevoPost.put("EmailUsuario", firebaseAuth.getCurrentUser().getEmail());
                                         nuevoPost.put("Descripcion", descripcion);
                                         nuevoPost.put("Likes", 0);
-                                        nuevoPost.put("Dilikes", 0);
+                                        nuevoPost.put("Dislikes", 0);
                                         nuevoPost.put("Anno", anno);
                                         nuevoPost.put("Mes", mes);
                                         nuevoPost.put("Dia", dia);
                                         nuevoPost.put("Hora", hora);
                                         nuevoPost.put("Minutos", minutos);
                                         nuevoPost.put("Segundos", segundos);
-                                        nuevoPost.put("Url",pathUrl);
+                                        nuevoPost.put("ImgUrl",pathUrl);
 
-                                        DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(idPost);
+                                        DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").document(idPost);
 
                                         reference.set(nuevoPost).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -180,7 +182,44 @@ public class NuevoPost extends AppCompatActivity {
                         });
 
             }else{
-                Toast.makeText(this,"Seleccione una imagen",Toast.LENGTH_LONG).show();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                String email = user.getEmail();
+
+                String pathUrl = "null";
+                int anno=getYear();
+                int mes=getMonth();
+                int dia=getDay();
+                int hora=getHour();
+                int minutos=getMinute();
+                int segundos=getSecond();
+                String idPost=String.valueOf(anno)+String.valueOf(mes)+String.valueOf(dia)+String.valueOf(hora)+String.valueOf(segundos);
+
+                nuevoPost.put("EmailUsuario", firebaseAuth.getCurrentUser().getEmail());
+                nuevoPost.put("Descripcion", descripcion);
+                nuevoPost.put("Likes", 0);
+                nuevoPost.put("Dislikes", 0);
+                nuevoPost.put("Anno", anno);
+                nuevoPost.put("Mes", mes);
+                nuevoPost.put("Dia", dia);
+                nuevoPost.put("Hora", hora);
+                nuevoPost.put("Minutos", minutos);
+                nuevoPost.put("Segundos", segundos);
+                nuevoPost.put("ImgUrl",pathUrl);
+
+                DocumentReference reference = refFirestore.collection(ReferenciasFirebase.REFERENCIA_POSTS).document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").document(idPost);
+
+                reference.set(nuevoPost).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Intent intent = new Intent(NuevoPost.this,MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            Toast.makeText(NuevoPost.this,"Error al publicar post",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         }
     }

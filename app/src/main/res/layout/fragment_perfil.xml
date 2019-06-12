@@ -4,12 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="Fragment Perfil"
-        android:layout_centerInParent="true"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -138,12 +133,22 @@
         app:strokeWidth="1dp"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_below="@+id/carrouselView"
+        android:id="@+id/recyclerViewPerfil"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/carrouselView"
+        android:layout_marginTop="5dp">
 
     </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/noPublicaciones"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Todavía no existen publicaciones"
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
