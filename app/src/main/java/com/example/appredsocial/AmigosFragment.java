@@ -1,6 +1,8 @@
 package com.example.appredsocial;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.appredsocial.Adapters.AdaptadorAmigos;
 import com.example.appredsocial.Objetos.Amigo;
 import com.example.appredsocial.Referencias.ReferenciasFirebase;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,7 +36,6 @@ import java.util.List;
 public class AmigosFragment extends Fragment {
     View rootView;
     private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
     private EditText txtBuscar;
     private Button btnBuscar;
 
@@ -49,16 +52,23 @@ public class AmigosFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        recyclerView = rootView.findViewById(R.id.RecyclerView);
-        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView = rootView.findViewById(R.id.recyclerViewAmigos);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         inicializarRecyclerView();
-        recyclerView.setLayoutManager(linearLayoutManager);
 
         txtBuscar = rootView.findViewById(R.id.txtNombreAmigos);
         btnBuscar = rootView.findViewById(R.id.btnBusquedaAmigos);
 
         refFirestore = FirebaseFirestore.getInstance();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adaptadorAmigos.notifyDataSetChanged();
+            }
+        }, 500);
 
         return rootView;
     }
@@ -66,8 +76,7 @@ public class AmigosFragment extends Fragment {
     private void inicializarRecyclerView(){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
-        firebaseFirestore.collection("Amigos").document(firebaseAuth.getCurrentUser().
-                getEmail()).collection("Amigo").get().
+        firebaseFirestore.collection("Amigos").document(firebaseAuth.getCurrentUser().getEmail()).collection("Amigo").get().
                 addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -92,7 +101,13 @@ public class AmigosFragment extends Fragment {
                             amigos.add(amigo);
                         }
                     }
-                });
+                })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+            }
+        });
 
         adaptadorAmigos = new AdaptadorAmigos(getContext(),amigos,firebaseAuth,firebaseFirestore);
         recyclerView.setAdapter(adaptadorAmigos);

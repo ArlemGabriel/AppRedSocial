@@ -24,28 +24,31 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragmentSeleccionado = null;
                 switch (item.getItemId()){
                     case R.id.nav_home:
-                        fragmentSeleccionado = new PostsFragment();
+                        changeFrag(new PostsFragment());
                         break;
                     case R.id.nav_profile:
-                        fragmentSeleccionado = new PerfilFragment();
+                        changeFrag(new PerfilFragment());
                         break;
                     case R.id.nav_friends:
-                        fragmentSeleccionado = new AmigosFragment();
+                        changeFrag(new AmigosFragment());
                         break;
                     case R.id.nav_search:
-                        fragmentSeleccionado = new BuscarFragment();
+                        changeFrag(new BuscarFragment());
                         break;
                     case R.id.nav_notifications:
-                        fragmentSeleccionado = new NotificacionesFragment();
+                        changeFrag(new NotificacionesFragment());
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragmentSeleccionado).commit();
+
                 return true;
             }
         });
+    }
+
+    public void changeFrag(Fragment frag){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,frag).commit();
     }
 
 }

@@ -2,13 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/imgFotoAmigos"
         android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        android:layout_height="100dp"
+        android:background="@drawable/icon_perfil"/>
     <TextView
         android:id="@+id/txtNombreAmigos"
         android:layout_width="wrap_content"

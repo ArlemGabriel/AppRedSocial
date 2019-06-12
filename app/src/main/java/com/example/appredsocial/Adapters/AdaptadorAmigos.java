@@ -27,13 +27,13 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public AdaptadorAmigos(Context context, ArrayList<Amigo> amigos, FirebaseAuth firebaseAuth,
                            FirebaseFirestore firebaseFirestore){
         Log.i("Info", "Inicializa el adaptador");
-        for (int i = 0; i<amigos.size(); i++){
-            Log.i("Info", "\t"+amigos.get(i).getNombreCompleto());
-        }
         this.context = context;
         this.amigos = amigos;
         this.firebaseAuth = firebaseAuth;
         this.firebaseFirestore = firebaseFirestore;
+        for (int i = 0; i<this.amigos.size(); i++){
+            Log.i("Info", "\t"+amigos.get(i).getNombreCompleto());
+        }
     }
 
     @Override
@@ -59,10 +59,7 @@ public class AdaptadorAmigos extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public int getItemCount() {
-        if(amigos == null){ return 0; }
-        else{ return amigos.size(); }
-    }
+    public int getItemCount() {return amigos.size(); }
 
     public void deleteAmigo(int posicion){
         //Borrar amigo de la base de datos
