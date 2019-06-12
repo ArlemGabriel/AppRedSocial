@@ -7,7 +7,7 @@
         android:id="@+id/imgFotoAmigos"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/icon_perfil"/>
+        android:background="@drawable/placeholder"/>
     <TextView
         android:id="@+id/txtNombreAmigos"
         android:layout_width="wrap_content"
