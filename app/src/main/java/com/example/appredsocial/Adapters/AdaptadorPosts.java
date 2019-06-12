@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appredsocial.ComentarioActivity;
 import com.example.appredsocial.Objetos.Post;
 import com.example.appredsocial.PerfilActivity;
 import com.example.appredsocial.R;
@@ -85,6 +86,14 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((Item)holder).tiempoPublicacion.setText(posts.get(position).tiempoDePublicacion());
         ((Item)holder).cantLikes.setText(String.valueOf(posts.get(position).getCantLikes()));
         ((Item)holder).cantDislikes.setText(String.valueOf(posts.get(position).getCantDislikes()));//*/
+
+        ((Item)holder).comentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(context, ComentarioActivity.class);
+                context.startActivity(i);
+            }
+        });
 
         ((Item)holder).nombre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,9 +269,10 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class Item extends RecyclerView.ViewHolder{
         TextView nombre, tiempoPublicacion, descripcion, cantLikes, cantDislikes;
-        ImageView fotoPerfil,imagenPublicacion, darLike, darDislike;
+        ImageView fotoPerfil,imagenPublicacion, darLike, darDislike, comentar;
         public Item(View itemView) {
             super(itemView);
+            comentar= itemView.findViewById(R.id.agregarComentario);
             cantLikes = itemView.findViewById(R.id.cantLikes);
             cantDislikes = itemView.findViewById(R.id.cantDislikes);
             darLike=itemView.findViewById(R.id.btnLike);
