@@ -28,6 +28,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,9 @@ public class PerfilActivity extends AppCompatActivity {
     private AdaptadorPosts adaptadorPosts;
     final ArrayList<Post> posts=new ArrayList<Post>();
     DocumentSnapshot ultimaCarga;
-    
+
+    ArrayList<String> urlPosts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,10 @@ public class PerfilActivity extends AppCompatActivity {
         txtGenero = findViewById(R.id.txtGenero);
         txtFechaNac = findViewById(R.id.txtFechaNacimiento);
         imageViewFotoPerfil = findViewById(R.id.imgPerfil);
+        carouselView = findViewById(R.id.carrouselView);
+
+        inicializarCarrusel();
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
@@ -85,6 +92,7 @@ public class PerfilActivity extends AppCompatActivity {
         refStorage = FirebaseStorage.getInstance().getReference(ReferenciasFirebase.REFERENCIA_FOTOS_PERFIL);
         refFirestore = FirebaseFirestore.getInstance();
 
+        cargarCarrusel();
         cargarPerfil();
 
         //Detectar cuando el recycler view esta al final del scroll
@@ -191,6 +199,42 @@ public class PerfilActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void inicializarCarrusel(){
+        FirebaseFirestore ff = FirebaseFirestore.getInstance();
+        /*Codigo del carrusel de fotos*/
+        urlPosts = new ArrayList<String>();
+
+        ff.collection("Posts").document(correoUsuario).collection("Post").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                            String url = documentSnapshot.getString("ImgUrl");
+
+                            urlPosts.add(url);
+                        }
+                        cargarCarrusel();
+
+                    }
+                });
+    }
+
+    private void cargarCarrusel(){
+        Log.i("Info", "cantidad de paginas: "+String.valueOf(urlPosts.size()));
+        carouselView.setPageCount(urlPosts.size()); //La cantidad de paginas del carrusel
+        Log.i("Info", "Sigue");
+
+        // Que hace cuando se cambia la imagen
+        carouselView.setImageListener(new ImageListener() {
+            @Override
+            public void setImageForPosition(int position, ImageView imageView) {
+                Picasso.with(getApplicationContext()).load(urlPosts.get(position)).fit().centerCrop().into(imageView);
+            }
+        });
+
+    }
+
     private void cargarPerfil() {
         refFirestore.collection(ReferenciasFirebase.REFERENCIA_PERFILES).document(correoUsuario).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
