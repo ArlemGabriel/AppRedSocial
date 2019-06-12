@@ -147,6 +147,7 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:text="Todavía no existen publicaciones"
+        android:visibility="invisible"
         android:gravity="center"
         android:layout_centerInParent="true"/>
 

@@ -2,6 +2,7 @@ package com.example.appredsocial;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.appredsocial.Adapters.AdaptadorPosts;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 public class PerfilFragment extends Fragment {
     View rootView;
     private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
     private CarouselView carouselView;
     private TextView txtNombre,txtCiudad,txtTelefono,txtCorreo,txtGenero,txtPrimaria,txtSecundaria,txtUniversidad,txtFechaNac;
     private ImageView imageViewFotoPerfil;
@@ -42,6 +45,12 @@ public class PerfilFragment extends Fragment {
     private StorageReference refStorage;
     private FirebaseFirestore refFirestore;
     private FirebaseAuth firebaseAuth;
+    int cantPublicaciones;
+
+    TextView noPublicaciones;
+    private AdaptadorPosts adaptadorPosts;
+    final ArrayList<Post> posts=new ArrayList<Post>();
+    DocumentSnapshot ultimaCarga;
 
 
     @Nullable
@@ -51,8 +60,14 @@ public class PerfilFragment extends Fragment {
         rootView= inflater.inflate(R.layout.fragment_perfil, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        inicializarRecyclerView();
 
+        recyclerView = rootView.findViewById(R.id.recyclerViewPerfil);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+
+        inicializarRecyclerView();
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        noPublicaciones= rootView.findViewById(R.id.noPublicaciones);
         txtNombre = rootView.findViewById(R.id.txtNombre);
         txtCiudad = rootView.findViewById(R.id.txtCiudad);
         txtCorreo = rootView.findViewById(R.id.txtCorreo);
@@ -69,7 +84,6 @@ public class PerfilFragment extends Fragment {
 
         cargarPerfil();
 
-
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,20 +91,63 @@ public class PerfilFragment extends Fragment {
                 startActivity(new Intent(getActivity(),NuevoPost.class));
             }
         });
+
+
+        //Detectar cuando el recycler view esta al final del scroll
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!recyclerView.canScrollVertically(1)) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(adaptadorPosts.getItemCount()<cantPublicaciones)
+                                cargarMasPosts();
+                        }
+                    },2000);
+                }
+            }
+        });
+
+        ActualizarLabelNoPublicaciones();
         return rootView;
+    }
+
+    private void ActualizarLabelNoPublicaciones() {
+
+        if(adaptadorPosts.getItemCount()<1) {
+            noPublicaciones.setVisibility(View.VISIBLE);
+            noPublicaciones.requestLayout();
+        }
+        else {
+            noPublicaciones.setVisibility(View.INVISIBLE);
+            noPublicaciones.requestLayout();
+        }
     }
 
     private void inicializarRecyclerView(){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        recyclerView = rootView.findViewById(R.id.recyclerViewPerfil);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        final ArrayList<Post> posts=new ArrayList<Post>();
         firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int cont=0;
+                        for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                            cont++;
+                        }
+                        cantPublicaciones=cont;
+                    }
+                });
+
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").limit(3).get()
             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                        noPublicaciones.setVisibility(View.INVISIBLE);
                         Post post=new Post();
                         post.setCorreoUsuario(documentSnapshot.getString("EmailUsuario"));
                         post.setDescripcion(documentSnapshot.getString("Descripcion"));
@@ -103,17 +160,44 @@ public class PerfilFragment extends Fragment {
                         post.setCantLikes(Integer.valueOf(documentSnapshot.get("Likes").toString()));
                         post.setCantDislikes(Integer.valueOf(documentSnapshot.get("Dislikes").toString()));
                         post.setUrlImagen(documentSnapshot.getString("ImgUrl"));
+                        ultimaCarga=documentSnapshot;
                         posts.add(post);
                     }
                 }
             });
-        TextView noPublicaciones= rootView.findViewById(R.id.noPublicaciones);
-        if(posts.isEmpty())
-            noPublicaciones.setVisibility(View.VISIBLE);
-        else
-            noPublicaciones.setVisibility(View.INVISIBLE);
-        recyclerView.setAdapter(new AdaptadorPosts(getContext(),posts,firebaseAuth, firebaseFirestore));
+        adaptadorPosts=new AdaptadorPosts(getContext(),posts,firebaseAuth, firebaseFirestore);
+        recyclerView.setAdapter(adaptadorPosts);
     }
+
+    private void cargarMasPosts() {
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").startAfter(ultimaCarga).limit(3).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            noPublicaciones.setVisibility(View.INVISIBLE);
+                            Post post = new Post();
+                            post.setCorreoUsuario(documentSnapshot.getString("EmailUsuario"));
+                            post.setDescripcion(documentSnapshot.getString("Descripcion"));
+                            post.setAnno(Integer.valueOf(documentSnapshot.get("Anno").toString()));
+                            post.setMes(Integer.valueOf(documentSnapshot.get("Mes").toString()));
+                            post.setDia(Integer.valueOf(documentSnapshot.get("Dia").toString()));
+                            post.setHora(Integer.valueOf(documentSnapshot.get("Hora").toString()));
+                            post.setMinutos(Integer.valueOf(documentSnapshot.get("Minutos").toString()));
+                            post.setSegundos(Integer.valueOf(documentSnapshot.get("Segundos").toString()));
+                            post.setCantLikes(Integer.valueOf(documentSnapshot.get("Likes").toString()));
+                            post.setCantDislikes(Integer.valueOf(documentSnapshot.get("Dislikes").toString()));
+                            post.setUrlImagen(documentSnapshot.getString("ImgUrl"));
+                            ultimaCarga = documentSnapshot;
+                            posts.add(post);
+                        }
+                        adaptadorPosts.notifyDataSetChanged();
+                    }
+                });
+    }
+
+
 
     private void CarruselFotos(){
         /*Codigo del carrusel de fotos

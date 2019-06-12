@@ -75,12 +75,14 @@ public class AdaptadorPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         ((Item)holder).descripcion.setText(posts.get(position).getDescripcion());
         ((Item)holder).tiempoPublicacion.setText(posts.get(position).tiempoDePublicacion());
-        String url=posts.get(position).getUrlImagen();
+        String url="";
+        url=posts.get(position).getUrlImagen();
         if(!url.isEmpty() && !url.equals("null")) {
             ((Item)holder).imagenPublicacion.getLayoutParams().height=450;
             ((Item)holder).imagenPublicacion.requestLayout();
             Picasso.with(context).load(url).centerInside().fit().into(((Item) holder).imagenPublicacion);
-        }
+        }else
+            ((Item)holder).imagenPublicacion.setImageURI(null);
     }
 
     @Override
