@@ -30,8 +30,8 @@ public class Post {
 
     public String tiempoDePublicacion(){
 
-        if(anno<getAnno()){
-            int Result=getAnno()-anno;
+        if(anno<getYear()){
+            int Result=getYear()-anno;
             if(Result==1){
                 return Result + " Año";
             }
@@ -65,7 +65,16 @@ public class Post {
                                 return Result + " Minutos";
                             }
                         } else {
-                            return "Ahora";
+                            if (segundos < getSecond()) {
+                                int Result = getSecond() - segundos;
+                                if (Result == 1) {
+                                    return Result + " Segundo";
+                                } else {
+                                    return Result + " Segundos";
+                                }
+                            } else {
+                                return "Ahora";
+                            }
                         }
                     }
                 }

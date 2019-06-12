@@ -176,7 +176,7 @@ public class PerfilFragment extends Fragment {
                     }
                 });
 
-        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").orderBy("id", Query.Direction.ASCENDING).limit(10).get()
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").orderBy("id", Query.Direction.DESCENDING).limit(10).get()
             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -206,7 +206,7 @@ public class PerfilFragment extends Fragment {
 
     private void cargarMasPosts() {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").orderBy("id", Query.Direction.ASCENDING).startAfter(ultimaCarga).limit(10).get()
+        firebaseFirestore.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).collection("Post").orderBy("id", Query.Direction.DESCENDING).startAfter(ultimaCarga).limit(10).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

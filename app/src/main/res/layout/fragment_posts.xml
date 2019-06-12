@@ -6,7 +6,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:text="Fragment Posts"
+        android:gravity="center"
+        android:text="No hay publicaciones de amigos"
         android:layout_centerInParent="true"/>
 
     <android.support.v7.widget.RecyclerView
