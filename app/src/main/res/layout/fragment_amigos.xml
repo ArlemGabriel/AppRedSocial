@@ -29,4 +29,14 @@
         android:layout_height="match_parent"
         android:layout_below="@id/layoutBusquedaAmigos"/>
 
+    <TextView
+        android:id="@+id/noAmigos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Todavía no tiene amigos"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>
