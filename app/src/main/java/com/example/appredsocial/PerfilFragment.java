@@ -32,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
+import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 
@@ -53,6 +55,7 @@ public class PerfilFragment extends Fragment {
     final ArrayList<Post> posts=new ArrayList<Post>();
     DocumentSnapshot ultimaCarga;
 
+    ArrayList<String> urlPosts;
 
     @Nullable
     @Override
@@ -79,10 +82,15 @@ public class PerfilFragment extends Fragment {
         txtGenero = rootView.findViewById(R.id.txtGenero);
         txtFechaNac = rootView.findViewById(R.id.txtFechaNacimiento);
         imageViewFotoPerfil = rootView.findViewById(R.id.imgPerfil);
+        carouselView = rootView.findViewById(R.id.carrouselView);
+
+        inicializarCarrusel();
 
         refStorage = FirebaseStorage.getInstance().getReference(ReferenciasFirebase.REFERENCIA_FOTOS_PERFIL);
         refFirestore = FirebaseFirestore.getInstance();
 
+
+        cargarCarrusel();
         cargarPerfil();
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -200,35 +208,48 @@ public class PerfilFragment extends Fragment {
                 });
     }
 
+    private void inicializarCarrusel(){
+        FirebaseFirestore ff = FirebaseFirestore.getInstance();
+        /*Codigo del carrusel de fotos*/
+        urlPosts = new ArrayList<String>();
 
+        ff.collection("Posts").document(firebaseAuth.getCurrentUser().getEmail()).
+                collection("Post").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                            String url = documentSnapshot.getString("ImgUrl");
 
-    private void CarruselFotos(){
-        /*Codigo del carrusel de fotos
-        carouselView = findViewById(R.id.carrouselView);
-        final Drawable[] sampleImages = {};     //Las fotos que aparecen en el carrusel de fotos
-                                                //tambien se puede hacer con ints, y se meten los
-                                                //ids, pero como lo agarramos de la base de datos
-                                                //mejor con Drawable
+                            urlPosts.add(url);
+                        }
+                        cargarCarrusel();
 
-        carouselView.setPageCount(sampleImages.length); //La cantidad de paginas del carrusel
+                    }
+                });
+    }
+
+    private void cargarCarrusel(){
+        Log.i("Info", "cantidad de paginas: "+String.valueOf(urlPosts.size()));
+        carouselView.setPageCount(urlPosts.size()); //La cantidad de paginas del carrusel
+        Log.i("Info", "Sigue");
 
         // Que hace cuando se cambia la imagen
         carouselView.setImageListener(new ImageListener() {
             @Override
             public void setImageForPosition(int position, ImageView imageView) {
-                imageView.setImageDrawable(sampleImages[position]); //Tambien se puede usar setImageResource y usar
-                                                                    //ids, pero como estamos agarrando las fotos de
-                                                                    //base de datos mejor con Drawable
+                //imageView.setImageResource(R.drawable.icon_amigos);
+                Picasso.with(getContext()).load(urlPosts.get(position)).fit().centerCrop().into(imageView);
             }
         });
 
-        // Que hace cuando toca una de las imagenes
-        carouselView.setImageClickListener(new ImageClickListener() {
-            @Override
-            public void onClick(int position) {
-                //Abrir pantalla de esa foto
-            }
-        });*/
+                        // Que hace cuando toca una de las imagenes
+                        carouselView.setImageClickListener(new ImageClickListener() {
+                            @Override
+                            public void onClick(int position) {
+                                //Abrir pantalla de esa foto
+                            }
+                        });
     }
 
     private void cargarPerfil() {
